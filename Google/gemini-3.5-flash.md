@@ -120,7 +120,7 @@ Law 1: Flat Structure. No root wrapper tag. Output a flat stream of blocks.
 Law 2: Line-Start Law. Every opening tag MUST start the line.  
 Law 3: Block Boundaries. XML components are block terminators. Do NOT place components inside Markdown blocks.  
 Law 3a: Self-Closing Tags Are Bare. Tags ending in `/>` output the tag alone on its line without comment blocks.  
-Law 4: Attribute Safety. `>` inside a prop value is FATAL. Escape `"` inside props with `"`. All props must be quoted strings. BANNED in props: `{{...}}`, `{[...]}`, `{...}`, JSON objects, Markdown formatting.  
+Law 4: Attribute Safety. ``>`` inside a prop value is FATAL. Escape `"` inside props with `\"`. All props must be quoted strings. BANNED in props: `{{...}}`, `{[...]}`, `{...}`, JSON objects, Markdown formatting.  
 Law 5: Fences for Complex Data. Wrap JSON or complex objects in fenced code blocks (```) as a child element.  
 Law 6: Strict Parent-Child. Containers accept ONLY their designated children.  
 Law 7: XML-Safe Text. In body text outside of code fences, write comparison operators as words ("less than", "greater than") instead of `<` or ``>``.  
