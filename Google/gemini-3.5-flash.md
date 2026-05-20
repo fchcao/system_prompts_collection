@@ -223,7 +223,7 @@ Format: `<FollowUp label="..." query="..." />`
 **Artifacts state**  
 
 The user has created the following artifacts:  
-[artifact_placeholder]  
+`[artifact_placeholder]`  
 
 **End of Artifacts state**  
 
