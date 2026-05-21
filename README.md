@@ -16,16 +16,16 @@
 
 | What | Date | Link |
 |------|------|------|
-| **Gemini 3.5 Flash** — Google's newest model | May 20, 2026 | [System prompt](Google/gemini-3.5-flash.md) · [AI Studio](Google/gemini-3.5-flash-ai-studio.md) · [Tools](Google/gemini-3.5-flash-tools.json) |
-| **Perplexity Computer** — Computer use agent | May 21, 2026 | [System prompt](Perplexity/perplexity-computer.md) |
-| **VS Code Copilot Agent** — GitHub Copilot in VS Code | May 21, 2026 | [System prompt](Misc/vscode-copilot-agent.md) |
-| **Docker Gordon AI** — Docker's AI assistant | May 21, 2026 | [System prompt](Misc/docker-gordon-ai.md) |
-| **Antigravity CLI** — Google's AI CLI | May 20, 2026 | [System prompt](Google/antigravity-cli.md) |
-| **Zed AI** — Zed editor assistant | May 16, 2026 | [System prompt](Misc/zed.md) |
-| **Grok Expert** — xAI's expert mode | May 11, 2026 | [System prompt](xAI/grok-expert.md) |
-| **GPT-5.3-Codex-Spark** — ultra-fast Codex model | May 10, 2026 | [System prompt](OpenAI/codex/gpt-5.3-codex-spark.md) |
-| **Amp Code** — Sourcegraph's coding agent | May 9, 2026 | [System prompt](Misc/amp-code.md) |
-| **GPT-5.5 Thinking** — ChatGPT's newest model | Apr 26, 2026 | [Thinking](OpenAI/gpt-5.5-thinking.md) · [API](OpenAI/gpt-5.5-api.md) · [Pro API](OpenAI/gpt-5.5-pro-api.md) |
+| **Perplexity Computer** | May 21, 2026 | [System prompt](Perplexity/perplexity-computer.md) |
+| **VS Code Copilot Agent** | May 21, 2026 | [System prompt](Misc/vscode-copilot-agent.md) |
+| **Docker Gordon AI** | May 21, 2026 | [System prompt](Misc/docker-gordon-ai.md) |
+| **Gemini 3.5 Flash** | May 20, 2026 | [System prompt](Google/gemini-3.5-flash.md) · [AI Studio](Google/gemini-3.5-flash-ai-studio.md) · [Tools](Google/gemini-3.5-flash-tools.json) |
+| **Antigravity CLI** | May 20, 2026 | [System prompt](Google/antigravity-cli.md) |
+| **Zed AI** | May 16, 2026 | [System prompt](Misc/zed.md) |
+| **Grok Expert** | May 11, 2026 | [System prompt](xAI/grok-expert.md) |
+| **GPT-5.3-Codex-Spark** | May 10, 2026 | [System prompt](OpenAI/codex/gpt-5.3-codex-spark.md) |
+| **Amp Code** | May 9, 2026 | [System prompt](Misc/amp-code.md) |
+| **GPT-5.5 Thinking** | Apr 26, 2026 | [Thinking](OpenAI/gpt-5.5-thinking.md) · [API](OpenAI/gpt-5.5-api.md) · [Pro API](OpenAI/gpt-5.5-pro-api.md) |
 
 ---
 
