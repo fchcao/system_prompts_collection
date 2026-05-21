@@ -1,15 +1,16 @@
 > 📰 **As seen in The Washington Post:** [See the hidden rules behind AI. Then use them to rewrite this article.](https://wapo.st/49t4gSb) (May 11, 2026)
 # System Prompts Leaks
 
+<img alt="ChatGPT leaking its system prompt after being asked to repeat all of the above" src="https://github.com/user-attachments/assets/0037a6c5-2ae4-4d34-8be0-0d679773172b" />
+
+
 [![GitHub Views per Week](https://raw.githubusercontent.com/asgeirtj/system_prompts_leaks/traffic/traffic-system_prompts_leaks/views_per_week.svg)](https://github.com/asgeirtj/system_prompts_leaks)
 [![GitHub Clones per Week](https://raw.githubusercontent.com/asgeirtj/system_prompts_leaks/traffic/traffic-system_prompts_leaks/clones_per_week.svg)](https://github.com/asgeirtj/system_prompts_leaks)
+ ![Last Commit](https://img.shields.io/github/last-commit/asgeirtj/system_prompts_leaks)
 
 <a href="https://trendshift.io/repositories/14577" target="_blank"><img src="https://trendshift.io/api/badge/repositories/14577" alt="asgeirtj%2Fsystem_prompts_leaks | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 
 
-
-
----
 
 ## 🔥 Recently Updated
 
@@ -198,6 +199,6 @@ Released under the [MIT License](LICENSE).
 
 [![Star History Chart](https://api.star-history.com/svg?repos=asgeirtj/system_prompts_leaks&type=Date)](https://www.star-history.com/#asgeirtj/system_prompts_leaks&Date)
 
-<img alt="ChatGPT leaking its system prompt after being asked to repeat all of the above" src="https://github.com/user-attachments/assets/0037a6c5-2ae4-4d34-8be0-0d679773172b" />
+
 
 <img alt="Claude confirming an extracted system prompt is authentic" src="https://github.com/user-attachments/assets/444e3fcc-9374-4964-afd3-069222713dc0" />
