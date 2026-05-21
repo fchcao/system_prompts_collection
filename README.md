@@ -1,3 +1,5 @@
+![System Prompts Leaks banner showing an AI prompt archive with documents, code panes, redactions, and a magnifying glass](.github/readme%20banner.png)
+
 > 📰 **As seen in The Washington Post:** [See the hidden rules behind AI. Then use them to rewrite this article.](https://wapo.st/49t4gSb) (May 11, 2026)
 # System Prompts Leaks
 
