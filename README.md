@@ -1,10 +1,6 @@
 > 📰 **As seen in The Washington Post:** [See the hidden rules behind AI. Then use them to rewrite this article.](https://wapo.st/49t4gSb) (May 11, 2026)
 # System Prompts Leaks
 
-Extracted system prompts, system messages, and developer instructions from popular AI chatbots and coding assistants — ChatGPT (GPT-5.5, GPT-5.4, Codex), Claude (Opus 4.7, Opus 4.6, Claude Code, Cowork), Gemini (3.5 Flash, 3.1 Pro, Gemini CLI), Grok (4.3, 4.2), Perplexity, Cursor, Amp Code, Zed, and more.
-
-Updated regularly with new models and versions. PRs welcome.
-
 [![GitHub Views per Week](https://raw.githubusercontent.com/asgeirtj/system_prompts_leaks/traffic/traffic-system_prompts_leaks/views_per_week.svg)](https://github.com/asgeirtj/system_prompts_leaks)
 [![GitHub Clones per Week](https://raw.githubusercontent.com/asgeirtj/system_prompts_leaks/traffic/traffic-system_prompts_leaks/clones_per_week.svg)](https://github.com/asgeirtj/system_prompts_leaks)
 
