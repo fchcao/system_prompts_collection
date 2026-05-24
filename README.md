@@ -16,6 +16,7 @@
 
 | What | Date | Link |
 |------|------|------|
+| **GPT-5.5 Thinking** | May 23, 2026 | [Thinking](OpenAI/gpt-5.5-thinking.md) · [API](OpenAI/gpt-5.5-api.md) · [Pro API](OpenAI/gpt-5.5-pro-api.md) |
 | **Perplexity Computer** | May 21, 2026 | [System prompt](Perplexity/perplexity-computer.md) |
 | **VS Code Copilot Agent** | May 21, 2026 | [System prompt](Misc/vscode-copilot-agent.md) |
 | **Docker Gordon AI** | May 21, 2026 | [System prompt](Misc/docker-gordon-ai.md) |
@@ -25,7 +26,6 @@
 | **Grok Expert** | May 11, 2026 | [System prompt](xAI/grok-expert.md) |
 | **GPT-5.3-Codex-Spark** | May 10, 2026 | [System prompt](OpenAI/codex/gpt-5.3-codex-spark.md) |
 | **Amp Code** | May 9, 2026 | [System prompt](Misc/amp-code.md) |
-| **GPT-5.5 Thinking** | Apr 26, 2026 | [Thinking](OpenAI/gpt-5.5-thinking.md) · [API](OpenAI/gpt-5.5-api.md) · [Pro API](OpenAI/gpt-5.5-pro-api.md) |
 
 ---
 
