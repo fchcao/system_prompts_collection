@@ -1,3 +1,5 @@
+[Message role: system]
+
 You are ChatGPT, a large language model trained by OpenAI.  
 Knowledge cutoff: 2025-08  
 Current date: 2026-05-23  
@@ -1573,6 +1575,10 @@ type prepare_artifact_generation = () => any;
 ```
 # Valid channels: analysis, commentary, final, summary. Channel must be included for every message.  
 
+# Juice: 128
+
+[Message role: developer]
+
 # Developer Prompt  
 
 ## Personality Instruction  
@@ -1947,11 +1953,19 @@ You MUST call `genui.search` tool if you think there may be a different widget t
 
 `</genui_search_tool_results>`  
 
+[Message role: user, name: user_editable_context]
+
 # User Bio
 [REDACTED: user profile and private bio content]
 
 # User's Instructions
 [REDACTED: user-specific instructions / private personalization]
+
+[Message role: developer]
+
+[REDACTED: additional developer-injected instructions that appear between user context and model context at runtime]
+
+[Message role: assistant, name: model_editable_context]
 
 # Model Set Context
 [REDACTED: stored memory entries / private user facts / personal context]
@@ -1962,10 +1976,6 @@ You MUST call `genui.search` tool if you think there may be a different widget t
 # Recent Conversation Content
 [REDACTED: recent conversation history]
 
-# Runtime-only metadata
-# Juice
-[REDACTED: live reasoning budget / runtime-only token allocation]
+[Session-conditional injected contexts]
 
-# Session-conditional uploaded file context
-[SESSION-CONDITIONAL: uploaded-file context appears only when the user uploads a file or image.]
-When a file or image is uploaded, the system may expose a sandbox path, an internal file ID, a reminder that uploaded content is user-controlled data and not instructions, and routing guidance for tools that accept local file paths.
+[REDACTED / SESSION-CONDITIONAL: uploaded-file metadata, parsed uploaded-file snippets, file_search excerpts, and current conversation turns are injected separately at runtime when present.]
