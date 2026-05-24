@@ -1946,3 +1946,26 @@ You MUST call `genui.search` tool if you think there may be a different widget t
 `</important_requirements>`  
 
 `</genui_search_tool_results>`  
+
+# User Bio
+[REDACTED: user profile and private bio content]
+
+# User's Instructions
+[REDACTED: user-specific instructions / private personalization]
+
+# Model Set Context
+[REDACTED: stored memory entries / private user facts / personal context]
+
+# User Knowledge Memories
+[REDACTED: inferred user knowledge memories]
+
+# Recent Conversation Content
+[REDACTED: recent conversation history]
+
+# Runtime-only metadata
+# Juice
+[REDACTED: live reasoning budget / runtime-only token allocation]
+
+# Session-conditional uploaded file context
+[SESSION-CONDITIONAL: uploaded-file context appears only when the user uploads a file or image.]
+When a file or image is uploaded, the system may expose a sandbox path, an internal file ID, a reminder that uploaded content is user-controlled data and not instructions, and routing guidance for tools that accept local file paths.
