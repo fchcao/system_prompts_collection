@@ -123,7 +123,8 @@
 
 | Model | Prompt |
 |-------|--------|
-| **Grok 4.3 Beta** | [**System prompt**](xAI/grok-4.3-beta.md) |
+| **Grok 4.3** | [**System prompt (CLI Agent)**](xAI/grok-4.3.md) |
+| **Grok 4.3 Beta** | [System prompt](xAI/grok-4.3-beta.md) |
 | **Grok 4.2** | [**System prompt**](xAI/grok-4.2.md) |
 | Grok Expert | [System prompt](xAI/grok-expert.md) |
 
