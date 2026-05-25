@@ -1,31 +1,20 @@
 # Grok Build (xAI) -- Full System Prompt & Tool Schemas
 
-> **Source**: Grok 4.3, xAI, April 2026
-> **Product**: Grok Build -- agentic CLI/TUI coding tool (comparable to Claude Code / Codex CLI)
-> **Verified against**: Multiple `system_prompt.txt` files from `~/.grok/sessions/` directories
-> **Date verified**: 2025-07-24
->
-> **What changed from the prior dump**: The previous version of this file was produced by a lower-capability model
-> that hallucinated several sections from Grok chat (grok.com) into the Grok Build prompt, invented
-> non-existent tools, missed real tools, stripped the XML-tag structure, omitted all JSON schemas, and
-> padded with thousands of lines of skill-file content. This version is verified against real session data.
+> **Model**: Grok 4.3, xAI, April 2026
+> **Product**: Grok Build -- agentic CLI/TUI coding tool
+> **Extracted from**: `~/.grok/sessions/<workspace>/<session-id>/system_prompt.txt`
 
 ---
 
 ## Table of Contents
 
-1. [Core System Prompt (Verbatim)](#1-core-system-prompt-verbatim)
+1. [Core System Prompt](#1-core-system-prompt)
 2. [Tool Definitions & JSON Schemas](#2-tool-definitions--json-schemas)
 3. [Runtime-Injected Context](#3-runtime-injected-context)
-4. [Errors in the Previous Dump](#4-errors-in-the-previous-dump)
 
 ---
 
-## 1. Core System Prompt (Verbatim)
-
-The following is the exact system prompt served to Grok Build in every session.
-It is stored per-session at `~/.grok/sessions/<workspace>/<session-id>/system_prompt.txt`.
-All sessions for the same workspace share the identical prompt (verified across multiple session IDs).
+## 1. Core System Prompt
 
 ```
 You are Grok 4.3 released by xAI in April 2026. You are an interactive CLI tool that helps users with software engineering tasks. Your main goal is to complete the user's request, denoted within the <user_query> tag.
@@ -196,10 +185,7 @@ Documentation about the Grok Build TUI -- including configuration, keyboard shor
 </user_guide>
 ```
 
-### Memory Section (Session-Specific, Appended Dynamically)
-
-The following `<memory>` block is appended to the system prompt and contains session-specific paths.
-The workspace memory path varies per project.
+### Memory Section (appended dynamically per session)
 
 ```
 <memory>
@@ -245,16 +231,14 @@ Memory files:
 
 ## 2. Tool Definitions & JSON Schemas
 
-These are the actual tools available in Grok Build sessions. Each tool definition includes the
-full description (the instruction text the model sees) and the complete JSON schema for its parameters.
-
-**Note on `memory_search` and `memory_get`**: These are referenced in the system prompt's `<memory>`
-section but are NOT present in the standard tool function list. They appear to be internal/implicit
-tools handled by the runtime rather than exposed as standard function-calling tools.
+26 tools are available in Grok Build sessions. `memory_search` and `memory_get` are referenced
+in the `<memory>` section but are not present in the standard function-calling tool list; they
+appear to be handled internally by the runtime.
 
 ### 2.1 run_terminal_command
 
 **Description:**
+
 Run a bash command and return its output.
 IMPORTANT: This tool is for terminal operations like git, npm, docker, etc. DO NOT use it for file operations (reading, writing, editing, searching, finding files) -- use the specialized tools for this instead.
 
@@ -294,7 +278,6 @@ Usage notes:
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "BashToolInput",
-  "description": "Input for the bash/terminal command tool.",
   "type": "object",
   "required": ["command"],
   "properties": {
@@ -308,14 +291,14 @@ Usage notes:
     },
     "timeout": {
       "type": ["integer", "null"],
-      "description": "Optional timeout in milliseconds (max 36000000). Default: 120000 (2 minutes). If not specified, commands exceeding the default timeout will be automatically backgrounded.",
       "format": "uint64",
-      "minimum": 0
+      "minimum": 0,
+      "description": "Optional timeout in milliseconds (max 36000000). Default: 120000 (2 minutes)."
     },
     "background": {
       "type": "boolean",
       "default": false,
-      "description": "Set to true for long-running commands that should run in the background (e.g., dev servers, long builds). The command will show output for 10 seconds, then automatically continue in the background while the agent proceeds with other tasks."
+      "description": "Set to true for long-running commands that should run in the background."
     }
   }
 }
@@ -326,6 +309,7 @@ Usage notes:
 ### 2.2 read_file
 
 **Description:**
+
 Reads a file from the local filesystem. You can access any file directly by using this tool.
 Assume this tool is able to read all files on the machine. If the User provides a path to a file assume that path is valid. It is okay to read a file that does not exist; an error will be returned.
 
@@ -336,7 +320,7 @@ Usage:
 - Any lines longer than 2000 characters will be truncated
 - Results are returned with line numbers starting at 1. The format is: LINE_NUMBER->LINE_CONTENT
 - This tool can read images (e.g. PNG, JPG, etc). When reading an image file the contents are presented visually as this tool uses multimodal LLMs.
-- This tool can read PDF files (.pdf). Each page is rendered as an image so the model can see the full visual content (text, charts, diagrams, tables). PDFs with 10 or fewer pages are read automatically. For larger PDFs, specify which pages to read using the `pages` parameter (e.g. pages="1-5"). Maximum 20 pages per call. Use `format: "text"` to extract raw text instead of rendering pages as images (useful for text-heavy PDFs where visual layout is not important).
+- This tool can read PDF files (.pdf). Each page is rendered as an image so the model can see the full visual content (text, charts, diagrams, tables). PDFs with 10 or fewer pages are read automatically. For larger PDFs, specify which pages to read using the `pages` parameter (e.g. pages="1-5"). Maximum 20 pages per call. Use `format: "text"` to extract raw text instead of rendering pages as images.
 - This tool can read PowerPoint files (.pptx). Text content is extracted from all slides including slide text and notes.
 - This tool can read Jupyter notebooks (.ipynb files) and returns all cells with their outputs, combining code, text, and visualizations.
 - This tool can only read files, not directories. To read a directory, use an ls command via the run_terminal_command tool.
@@ -354,23 +338,23 @@ Usage:
   "properties": {
     "target_file": {
       "type": "string",
-      "description": "The path of the file to read. You can use either a relative path in the workspace or an absolute path. If an absolute path is provided, it will be preserved as is."
+      "description": "The path of the file to read."
     },
     "offset": {
       "type": "integer",
-      "description": "The line number to start reading from. Only provide if the file is too large to read at once."
+      "description": "The line number to start reading from."
     },
     "limit": {
       "type": "integer",
-      "description": "The number of lines to read. Only provide if the file is too large to read at once."
+      "description": "The number of lines to read."
     },
     "format": {
       "type": ["string", "null"],
-      "description": "Output format for PDF files. 'image' (default) renders pages as images. 'text' extracts text content. Ignored for non-PDF files."
+      "description": "Output format for PDF files. 'image' (default) renders pages as images. 'text' extracts text content."
     },
     "pages": {
       "type": ["string", "null"],
-      "description": "Page range for PDF files (e.g. '1-5', '3', '10-'). Required for PDFs with more than 10 pages. Max 20 pages per call. Ignored for non-PDF files."
+      "description": "Page range for PDF files (e.g. '1-5', '3', '10-'). Required for PDFs with more than 10 pages. Max 20 pages per call."
     }
   }
 }
@@ -381,15 +365,16 @@ Usage:
 ### 2.3 search_replace
 
 **Description:**
+
 Performs exact string replacements in files.
 
 Usage:
 - You **MUST** use your `read_file` tool at least once in the conversation before editing. This tool will error if you attempt an edit without reading the file.
-- When editing text from read_file tool output, ensure you preserve the exact indentation (tabs/spaces) as it appears AFTER the line number prefix. The line number prefix format is: line number + ->. Everything after that -> separator is the actual file content to match. Never include any part of the line number prefix in the old_string or new_string.
+- When editing text from read_file tool output, ensure you preserve the exact indentation (tabs/spaces) as it appears AFTER the line number prefix.
 - ALWAYS prefer editing existing files in the codebase. NEVER write new files unless explicitly required.
 - Only use emojis if the user explicitly requests it. Avoid adding emojis to files unless asked.
-- The edit will FAIL if `old_string` is not unique in the file. Use the MINIMUM `old_string` that uniquely identifies the target -- prefer 1-2 distinctive lines over multi-line blocks (longer values are more prone to whitespace-drift failures). If the string genuinely appears multiple times, use `replace_all` to replace all occurrences.
-- Use `replace_all` for replacing and renaming strings across the file. This parameter is useful if you want to rename a variable for instance.
+- The edit will FAIL if `old_string` is not unique in the file. Use the MINIMUM `old_string` that uniquely identifies the target -- prefer 1-2 distinctive lines over multi-line blocks. If the string genuinely appears multiple times, use `replace_all` to replace all occurrences.
+- Use `replace_all` for replacing and renaming strings across the file.
 
 **JSON Schema:**
 ```json
@@ -401,7 +386,7 @@ Usage:
   "properties": {
     "file_path": {
       "type": "string",
-      "description": "The path to the file to modify. Always specify the target file as the first argument. You can use either a relative path in the workspace or an absolute path."
+      "description": "The path to the file to modify."
     },
     "old_string": {
       "type": "string",
@@ -425,6 +410,7 @@ Usage:
 ### 2.4 write
 
 **Description:**
+
 Writes a file to the local filesystem.
 
 Usage:
@@ -459,10 +445,10 @@ Usage:
 ### 2.5 list_dir
 
 **Description:**
+
 Lists files and directories in a given path.
 The 'target_directory' parameter can be relative to the workspace root or absolute.
 
-Other details:
 - The result does not display dot-files and dot-directories.
 - Respects .gitignore patterns (files/directories ignored by git are not shown).
 - Large directories are summarized with file counts and extension breakdowns instead of listing all files.
@@ -488,17 +474,15 @@ Other details:
 ### 2.6 grep
 
 **Description:**
+
 A powerful search tool built on ripgrep.
 
-Usage:
-- ALWAYS use grep for search tasks. NEVER invoke terminal grep, rg, or find. This tool has been optimized for correct permissions/access, is faster, and respects .gitignore
-- Supports full regex syntax, e.g. `log.*Error`, `function\s+\w+`. Ensure you escape special chars to get exact matches, e.g. `functionCall\(`
-- Avoid overly broad glob patterns (e.g., '--glob *') as they bypass .gitignore rules and may be slow
-- The pattern field is a raw regex string: do NOT wrap it in quotes or add trailing quote characters unnecessarily
-- Only use 'type' (or 'glob' for file types) when certain of the file type needed. Note: import paths may not match source file types (.js vs .ts)
-- Output modes: "content" shows matching lines (default), "files_with_matches" shows only file paths, "count" shows match counts per file
-- Pattern syntax: Uses ripgrep (not grep) - literal braces need escaping (e.g. use interface\{\} to find interface{} in Go code)
-- Multiline matching: By default patterns match within single lines only. For cross-line patterns like struct \{[\s\S]*?field, use multiline: true.
+- ALWAYS use grep for search tasks. NEVER invoke terminal grep, rg, or find.
+- Supports full regex syntax, e.g. `log.*Error`, `function\s+\w+`.
+- The pattern field is a raw regex string: do NOT wrap it in quotes or add trailing quote characters unnecessarily.
+- Output modes: "content" shows matching lines (default), "files_with_matches" shows only file paths, "count" shows match counts per file.
+- Pattern syntax: Uses ripgrep (not grep) -- literal braces need escaping (e.g. use `interface\{\}` to find `interface{}` in Go code).
+- Multiline matching: By default patterns match within single lines only. For cross-line patterns, use `multiline: true`.
 - Results are capped for responsiveness; truncated results show "at least" counts.
 - Content output follows ripgrep format: '-' for context lines, ':' for match lines, and all lines grouped by file.
 
@@ -520,7 +504,7 @@ Usage:
     },
     "type": {
       "type": ["string", "null"],
-      "description": "File type to search (rg --type). Common types: js, py, rust, go, java, etc. More efficient than glob for standard file types."
+      "description": "File type to search (rg --type). Common types: js, py, rust, go, java, etc."
     },
     "glob": {
       "type": ["string", "null"],
@@ -529,19 +513,19 @@ Usage:
     "output_mode": {
       "type": ["string", "null"],
       "enum": ["content", "files_with_matches", "count", null],
-      "description": "Output mode: \"content\" shows matching lines (supports -A/-B/-C context, -n line numbers, head_limit), \"files_with_matches\" shows only file paths (supports head_limit), \"count\" shows match counts (supports head_limit). Defaults to \"content\"."
+      "description": "Output mode. Defaults to \"content\"."
     },
     "-A": {
       "type": "integer",
-      "description": "Number of lines to show after each match (rg -A). Requires output_mode: \"content\", ignored otherwise."
+      "description": "Number of lines to show after each match (rg -A)."
     },
     "-B": {
       "type": "integer",
-      "description": "Number of lines to show before each match (rg -B). Requires output_mode: \"content\", ignored otherwise."
+      "description": "Number of lines to show before each match (rg -B)."
     },
     "-C": {
       "type": "integer",
-      "description": "Number of lines to show before and after each match (rg -C). Requires output_mode: \"content\", ignored otherwise."
+      "description": "Number of lines to show before and after each match (rg -C)."
     },
     "-i": {
       "type": ["boolean", "null"],
@@ -549,11 +533,11 @@ Usage:
     },
     "multiline": {
       "type": ["boolean", "null"],
-      "description": "Enable multiline mode where . matches newlines and patterns can span lines (rg -U --multiline-dotall). Default: false."
+      "description": "Enable multiline mode (rg -U --multiline-dotall). Default: false."
     },
     "head_limit": {
       "type": "integer",
-      "description": "Limit output to first N lines/entries, equivalent to \"| head -N\". Works across all output modes: content (limits output lines), files_with_matches (limits file paths), count (limits count entries). When unspecified, shows all ripgrep results."
+      "description": "Limit output to first N lines/entries."
     }
   }
 }
@@ -564,15 +548,16 @@ Usage:
 ### 2.7 todo_write
 
 **Description:**
+
 Create and manage a structured task list. The user sees this list live -- it is your primary way to show progress.
 
 Use for any task with 3+ steps. Skip for trivial single-step work.
 
 - Mark each item completed IMMEDIATELY when done -- never batch.
 - Only ONE item in_progress at a time.
-- ONLY mark completed when fully accomplished -- never if tests are failing, implementation is partial, or errors are unresolved.
+- ONLY mark completed when fully accomplished.
 - Add new items as you discover them.
-- merge defaults to true: send only the items you are changing, not the full list. To flip status without changing content, send just id + status.
+- merge defaults to true: send only the items you are changing, not the full list.
 
 **JSON Schema:**
 ```json
@@ -600,7 +585,7 @@ Use for any task with 3+ steps. Skip for trivial single-step work.
           "status": {
             "type": ["string", "null"],
             "enum": ["pending", "in_progress", "completed", "cancelled", null],
-            "description": "The status of the todo item: pending, in_progress, completed, or cancelled"
+            "description": "The status of the todo item"
           }
         }
       }
@@ -608,7 +593,7 @@ Use for any task with 3+ steps. Skip for trivial single-step work.
     "merge": {
       "type": "boolean",
       "default": true,
-      "description": "Optional. When true (default), merges the provided todos into the existing list by id (partial updates allowed). When false, the provided todos replace the existing list."
+      "description": "When true (default), merges the provided todos into the existing list by id. When false, replaces the existing list."
     }
   }
 }
@@ -619,25 +604,20 @@ Use for any task with 3+ steps. Skip for trivial single-step work.
 ### 2.8 spawn_subagent
 
 **Description:**
+
 Launch a new agent to handle complex, multi-step tasks autonomously.
 
-The spawn_subagent tool launches specialized agents that autonomously handle complex tasks. Each agent type has specific capabilities and tools available to it.
-
-Available agent types and the tools they have access to:
-
-- **general-purpose**: General-purpose agent for researching complex questions, searching for code, and executing multi-step tasks. When you are searching for a keyword or file and are not confident that you will find the right match in the first few tries use this agent to perform the search for you. Has access to all tools: run_terminal_command, read_file, search_replace, list_dir, grep, web_search, and todo_write.
-- **explore**: Fast agent specialized for exploring codebases. Use this when you need to quickly find files by patterns (eg. "src/components/**/*.tsx"), search code for keywords (eg. "API endpoints"), or answer questions about the codebase (eg. "how do API endpoints work?"). When calling this agent, specify the desired thoroughness level: "quick" for basic searches, "medium" for moderate exploration, or "very thorough" for comprehensive analysis across multiple locations and naming conventions. Read-only -- has access to: run_terminal_command, read_file, list_dir, grep.
-- **plan**: Software architect agent for designing implementation plans. Use this when you need to plan the implementation strategy for a task. Returns step-by-step plans, identifies critical files, and considers architectural trade-offs. Read-only -- has access to all tools except file editing (search_replace is not available): run_terminal_command, read_file, list_dir, grep, web_search, and todo_write.
-- **codex:codex-rescue**: Proactively use when Claude Code is stuck, wants a second implementation or diagnosis pass, needs a deeper root-cause investigation, or should hand a substantial coding task to Codex through the shared runtime
-
-[The full spawn_subagent description continues with extensive guidance on when to use/not use subagents, context briefing, resuming, capability modes, and isolation modes. These are behavioral instructions, not schema.]
+Available agent types:
+- **general-purpose**: Full access to all tools. For researching, searching, and executing multi-step tasks.
+- **explore**: Read-only. Fast codebase exploration. Has: run_terminal_command, read_file, list_dir, grep.
+- **plan**: Read-only. Software architect for designing implementation plans. Has all tools except search_replace.
+- **codex:codex-rescue**: Use when stuck, wants a second implementation pass, or deeper root-cause investigation.
 
 **JSON Schema:**
 ```json
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "TaskToolInput",
-  "description": "Input for the task tool.",
   "type": "object",
   "required": ["prompt", "description"],
   "properties": {
@@ -652,31 +632,31 @@ Available agent types and the tools they have access to:
     "subagent_type": {
       "type": "string",
       "default": "general-purpose",
-      "description": "Name of the subagent type to launch. Built-in types: \"general-purpose\", \"explore\", \"plan\". Additional user-defined types may also be available."
+      "description": "Name of the subagent type to launch."
     },
     "background": {
       "type": "boolean",
       "default": false,
-      "description": "Set to true to run this subagent in the background. Returns immediately with a subagent_id. Use the task output tool to retrieve results."
+      "description": "Set to true to run this subagent in the background."
     },
     "resume_from": {
       "type": ["string", "null"],
-      "description": "Resume from a previously completed subagent's conversation. Pass the subagent_id returned by a prior task call. The new subagent continues the previous one's raw transcript with the new task prompt appended. The source must be completed (not running), belong to the current session, and use the same subagent_type."
+      "description": "Resume from a previously completed subagent's conversation. Pass the subagent_id returned by a prior call."
     },
     "capability_mode": {
       "type": ["string", "null"],
       "default": null,
       "enum": ["read-only", "read-write", "execute", "all", null],
-      "description": "Capability mode: \"read-only\", \"read-write\", \"execute\", or \"all\". Controls which tool classes the child can use. Default is determined by the role."
+      "description": "Controls which tool classes the child can use."
     },
     "isolation": {
       "type": ["string", "null"],
       "enum": ["none", "worktree", null],
-      "description": "Isolation mode: \"none\" (default, shared workspace) or \"worktree\" (isolated git worktree). Worktree mode prevents the child's edits from affecting the parent workspace until explicitly merged."
+      "description": "\"none\" (default, shared workspace) or \"worktree\" (isolated git worktree)."
     },
     "cwd": {
       "type": ["string", "null"],
-      "description": "Explicit working directory for the subagent. The path must exist and be a directory. Mutually exclusive with isolation=\"worktree\". Ignored when resume_from is set (the resumed child inherits its source's cwd/worktree)."
+      "description": "Explicit working directory for the subagent. Mutually exclusive with isolation=\"worktree\"."
     }
   }
 }
@@ -687,14 +667,8 @@ Available agent types and the tools they have access to:
 ### 2.9 get_command_or_subagent_output
 
 **Description:**
-Get output and status from a background task or subagent.
 
-Usage notes:
-- Use the task_id from a command run with =true, or a subagent launched with =true
-- Use block=true to wait for the task to complete
-- Use timeout_ms to limit wait time when blocking (default 30s)
-- Returns current output, status, and exit code if completed
-- If output is large, use read_file on the output_file path
+Get output and status from a background task or subagent.
 
 **JSON Schema:**
 ```json
@@ -716,9 +690,9 @@ Usage notes:
     "timeout_ms": {
       "type": ["integer", "null"],
       "default": null,
-      "description": "Max wait time in milliseconds",
       "format": "uint64",
-      "minimum": 0
+      "minimum": 0,
+      "description": "Max wait time in milliseconds"
     }
   }
 }
@@ -729,13 +703,8 @@ Usage notes:
 ### 2.10 kill_command_or_subagent
 
 **Description:**
-Terminate a running background task or subagent.
 
-Usage notes:
-- Use the task_id from a command run with =true, or a subagent launched with =true
-- Sends SIGTERM/SIGKILL for bash tasks; sends Cancel+Shutdown for subagents
-- Returns success if task was killed or had already exited
-- Use when a background task or subagent is stuck or no longer needed
+Terminate a running background task or subagent. Sends SIGTERM/SIGKILL for bash tasks; sends Cancel+Shutdown for subagents. Returns success if task was killed or had already exited.
 
 **JSON Schema:**
 ```json
@@ -758,13 +727,8 @@ Usage notes:
 ### 2.11 wait_commands_or_subagents
 
 **Description:**
-Wait for multiple background tasks or subagents to complete.
 
-Usage notes:
-- task_ids: list of task IDs to wait for (from =true commands or =true subagents)
-- mode: 'wait_any' returns when the first task completes, 'wait_all' waits for all tasks
-- timeout_ms: optional max wait time in milliseconds (default 30s)
-- Returns status and output for all requested tasks
+Wait for multiple background tasks or subagents to complete.
 
 **JSON Schema:**
 ```json
@@ -787,9 +751,9 @@ Usage notes:
     "timeout_ms": {
       "type": ["integer", "null"],
       "default": null,
-      "description": "Max wait time in milliseconds",
       "format": "uint64",
-      "minimum": 0
+      "minimum": 0,
+      "description": "Max wait time in milliseconds"
     }
   }
 }
@@ -800,16 +764,12 @@ Usage notes:
 ### 2.12 scheduler_create
 
 **Description:**
-Create a scheduled task that runs a prompt on a recurring interval.
 
-Used by /loop to schedule recurring work. Set fireImmediately: true (default) to fire on creation, then on the specified interval.
+Create a scheduled task that runs a prompt on a recurring interval. Used by /loop to schedule recurring work.
 
-Usage notes:
 - Interval format: "5m" (minutes), "2h" (hours), "1d" (days), "60s" (seconds, min 60)
 - Maximum 50 scheduled tasks at once
 - Recurring tasks auto-expire after 7 days
-- Use scheduler_delete to cancel a task by ID
-- Use scheduler_list to see all active tasks
 
 **JSON Schema:**
 ```json
@@ -830,12 +790,12 @@ Usage notes:
     "recurring": {
       "type": "boolean",
       "default": true,
-      "description": "Whether the task repeats (true) or fires once (false). Default: true"
+      "description": "Whether the task repeats (true) or fires once (false)."
     },
     "fireImmediately": {
       "type": "boolean",
       "default": true,
-      "description": "Whether to fire immediately on creation (true) or wait for the first interval (false). Default: true"
+      "description": "Whether to fire immediately on creation (true) or wait for the first interval (false)."
     },
     "durable": {
       "type": ["boolean", "null"],
@@ -851,11 +811,8 @@ Usage notes:
 ### 2.13 scheduler_delete
 
 **Description:**
-Cancel a scheduled task by ID.
 
-Returns success: true if the task was found and removed, false if no task with that ID exists.
-
-IMPORTANT: Do not cancel a scheduled task on your own initiative. Unless the user's original prompt explicitly includes a termination condition (e.g. "stop when X happens"), you must ask the user for confirmation before calling this tool. Use ask_user_question if available, otherwise ask inline in your response.
+Cancel a scheduled task by ID. Do not cancel on your own initiative unless the user's prompt explicitly includes a termination condition.
 
 **JSON Schema:**
 ```json
@@ -878,6 +835,7 @@ IMPORTANT: Do not cancel a scheduled task on your own initiative. Unless the use
 ### 2.14 scheduler_list
 
 **Description:**
+
 List all active scheduled tasks with their IDs, prompts, intervals, and next fire times.
 
 **JSON Schema:**
@@ -896,38 +854,13 @@ List all active scheduled tasks with their IDs, prompts, intervals, and next fir
 ### 2.15 monitor
 
 **Description:**
-Start a background monitor that streams events from a long-running script. Each stdout line is an event - you can keep working and notifications arrive in the chat.
 
-Your script's stdout is the event stream. Each line becomes a notification. Exit ends the watch.
+Start a background monitor that streams events from a long-running script. Each stdout line is an event -- you can keep working and notifications arrive in the chat. Exit ends the watch.
 
-Usage examples:
-```bash
-# Each matching log line is an event
-tail -f /var/log/app.log | grep --line-buffered "ERROR"
-
-# Each file change is an event
-inotifywait -m --format '%e %f' /watched/dir
-
-# Poll GitHub for new PR comments and emit one line per new comment
-last=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-while true; do
-  now=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-  gh api "repos/owner/repo/issues/123/comments?since=$last" \
-    --jq '.[] | "\(.user.login): \(.body)"'
-  last=$now; sleep 30
-done
-```
-
-**Script quality:**
-- Always use `grep --line-buffered` in pipes -- without it, pipe buffering delays events by minutes.
-- **Python scripts need `PYTHONUNBUFFERED=1`** (or `python -u`) when monitored. Without it, Python buffers stdout (~8 KB) before flushing -- `tail -f` on the output sees nothing for minutes. The harness sets this automatically for background tasks and monitor commands, but including it explicitly does no harm.
-- In poll loops, handle transient failures (`curl ... || true`) -- one failed request shouldn't kill the monitor.
-- Poll intervals: 30s+ for remote APIs (rate limits), 0.5-1s for local checks.
-- Write a specific `description` -- it appears in every notification ("errors in deploy.log" not "watching logs").
-
-**Output volume**: Every stdout line becomes a message in the conversation, so write selective filters. Never pipe raw logs -- use `grep --line-buffered`, `awk`, or a wrapper that only emits the events you care about.
-
-Set `persistent: true` for session-length watches (PR monitoring, log tails) -- the monitor runs until you call kill_command_or_subagent or until the session ends.
+- Always use `grep --line-buffered` in pipes.
+- Python scripts need `PYTHONUNBUFFERED=1` (or `python -u`) when monitored.
+- Poll intervals: 30s+ for remote APIs, 0.5-1s for local checks.
+- Set `persistent: true` for session-length watches.
 
 **JSON Schema:**
 ```json
@@ -943,7 +876,7 @@ Set `persistent: true` for session-length watches (PR monitoring, log tails) -- 
     },
     "description": {
       "type": "string",
-      "description": "Short human-readable description of what you are monitoring (shown in every notification)."
+      "description": "Short human-readable description of what you are monitoring."
     },
     "persistent": {
       "type": ["boolean", "null"],
@@ -953,9 +886,9 @@ Set `persistent: true` for session-length watches (PR monitoring, log tails) -- 
     "timeoutMs": {
       "type": ["integer", "null"],
       "default": null,
-      "description": "Kill the monitor after this deadline (ms). Default: 300000 (5 min).",
       "format": "uint64",
-      "minimum": 0
+      "minimum": 0,
+      "description": "Kill the monitor after this deadline (ms). Default: 300000 (5 min)."
     }
   }
 }
@@ -966,9 +899,8 @@ Set `persistent: true` for session-length watches (PR monitoring, log tails) -- 
 ### 2.16 search_tool
 
 **Description:**
-Search for MCP tools by keyword and retrieve their input schemas.
 
-If status is "partial", some servers may still be connecting.
+Search for MCP tools by keyword and retrieve their input schemas. If status is "partial", some servers may still be connecting.
 
 **JSON Schema:**
 ```json
@@ -980,15 +912,15 @@ If status is "partial", some servers may still be connecting.
   "properties": {
     "query": {
       "type": "string",
-      "description": "Keywords to match against tool names, server names, and descriptions. Include the server name and action for best results (e.g. \"linear create issue\", \"slack read thread history\")."
+      "description": "Keywords to match against tool names, server names, and descriptions."
     },
     "limit": {
       "type": ["integer", "null"],
       "default": 5,
-      "description": "Maximum number of results to return (default 5).",
       "format": "uint8",
       "maximum": 255,
-      "minimum": 0
+      "minimum": 0,
+      "description": "Maximum number of results to return (default 5)."
     }
   }
 }
@@ -999,9 +931,8 @@ If status is "partial", some servers may still be connecting.
 ### 2.17 use_tool
 
 **Description:**
-Call an MCP integration tool. You MUST call `search_tool` first to retrieve the tool's input schema before calling this tool. NEVER guess parameter names.
 
-The `tool_name` must be the qualified name (e.g., `linear__save_issue`). The `tool_input` must conform exactly to the input schema returned by `search_tool`.
+Call an MCP integration tool. You MUST call `search_tool` first to retrieve the tool's input schema before calling this tool. NEVER guess parameter names.
 
 **JSON Schema:**
 ```json
@@ -1013,12 +944,12 @@ The `tool_name` must be the qualified name (e.g., `linear__save_issue`). The `to
   "properties": {
     "tool_name": {
       "type": "string",
-      "description": "The qualified name of the integration tool to call (e.g., \"linear__save_issue\"). Must be a tool previously discovered via `search_tool`."
+      "description": "The qualified name of the integration tool to call (e.g., \"linear__save_issue\")."
     },
     "tool_input": {
       "type": "object",
       "additionalProperties": true,
-      "description": "The arguments to pass to the tool, as a JSON object. Use the parameter schema returned by `search_tool` to construct this."
+      "description": "The arguments to pass to the tool, as a JSON object."
     }
   }
 }
@@ -1029,7 +960,8 @@ The `tool_name` must be the qualified name (e.g., `linear__save_issue`). The `to
 ### 2.18 image_gen
 
 **Description:**
-Generate an image from a text description using the xAI Imagine API. Returns the absolute path where the image was saved. Use this tool whenever you need a custom image for a webpage -- e.g. hero banners, illustrations, icons, backgrounds, or product photos. You can control the shape of the image via the aspect_ratio parameter (e.g. '16:9' for a wide banner, '1:1' for a square thumbnail, '9:16' for a phone wallpaper). The generated image is saved to a session-managed directory. After generation, if the image is needed in the project directory (e.g. for a web application), you can copy the file from the session folder. Example: image_gen(prompt="A golden sunset over a calm ocean with silhouetted palm trees", aspect_ratio="16:9")
+
+Generate an image from a text description using the xAI Imagine API. Returns the absolute path where the image was saved.
 
 **JSON Schema:**
 ```json
@@ -1041,12 +973,12 @@ Generate an image from a text description using the xAI Imagine API. Returns the
   "properties": {
     "prompt": {
       "type": "string",
-      "description": "A detailed description of the image to generate. Be specific about the subject, style, colors, composition, and mood. Do NOT include any text that should appear in the image -- the model cannot render text reliably."
+      "description": "A detailed description of the image to generate."
     },
     "aspect_ratio": {
       "type": "string",
       "default": "auto",
-      "description": "The aspect ratio of the generated image. Defaults to 'auto' (model selects best ratio for the prompt). Supported values: 1:1 (social media, thumbnails), 16:9 / 9:16 (widescreen, mobile, stories), 4:3 / 3:4 (presentations, portraits), 3:2 / 2:3 (photography), 2:1 / 1:2 (banners, headers), 19.5:9 / 9:19.5 (modern smartphone displays), 20:9 / 9:20 (ultra-wide displays), auto."
+      "description": "Supported values: 1:1, 16:9, 9:16, 4:3, 3:4, 3:2, 2:3, 2:1, 1:2, 19.5:9, 9:19.5, 20:9, 9:20, auto."
     }
   }
 }
@@ -1057,7 +989,8 @@ Generate an image from a text description using the xAI Imagine API. Returns the
 ### 2.19 image_edit
 
 **Description:**
-Edit or transform an image using the xAI Imagine API with one or more reference photos. Returns the absolute path where the edited image was saved. Use this tool (instead of image_gen) when the user provides a reference image and wants to preserve likeness, transfer style, remix, or perform image-to-image editing. The `image` parameter is required -- pass filesystem paths or data URLs for the reference image(s). Example: image_edit(prompt="this person in the style of retro anime cowboy bebop", image=["/Users/kgeorge/Downloads/profile.jpg"])
+
+Edit or transform an image using the xAI Imagine API with one or more reference photos. Returns the absolute path where the edited image was saved.
 
 **JSON Schema:**
 ```json
@@ -1069,17 +1002,17 @@ Edit or transform an image using the xAI Imagine API with one or more reference 
   "properties": {
     "prompt": {
       "type": "string",
-      "description": "A text description of the desired edit or transformation. Describe what the output image should look like, referencing the input image(s). Be specific about style, composition, and mood."
+      "description": "A text description of the desired edit or transformation."
     },
     "image": {
       "type": "array",
       "items": { "type": "string" },
-      "description": "One or more reference images to condition the edit on. Each entry is either an absolute filesystem path or a `data:image/...;base64,...` URL. The tool reads the actual image bytes and forwards them to the Imagine model."
+      "description": "One or more reference images. Each entry is either an absolute filesystem path or a data:image/...;base64,... URL."
     },
     "aspect_ratio": {
       "type": "string",
       "default": "auto",
-      "description": "The aspect ratio of the output image. For single-image edits this is ignored -- the output matches the input image's aspect ratio. For multi-image edits, defaults to 'auto'. Supported values: 1:1, 16:9, 9:16, 4:3, 3:4, 3:2, 2:3, 2:1, 1:2, 19.5:9, 9:19.5, 20:9, 9:20, auto."
+      "description": "Supported values: 1:1, 16:9, 9:16, 4:3, 3:4, 3:2, 2:3, 2:1, 1:2, 19.5:9, 9:19.5, 20:9, 9:20, auto."
     }
   }
 }
@@ -1090,7 +1023,8 @@ Edit or transform an image using the xAI Imagine API with one or more reference 
 ### 2.20 video_gen
 
 **Description:**
-Generate a video from a text description using the xAI Video Generation API. Returns the absolute path where the video was saved. Use this tool whenever you need a custom video for a webpage -- e.g. hero background videos, product demos, animated illustrations, looping ambient clips, or promotional content. You can control the duration (1-15 seconds; omit for the API default of 8s), aspect ratio (e.g. '16:9', '9:16', '1:1'), and resolution ('480p' or '720p'). Pass `duration` explicitly whenever the user asks for a specific length or a scripted sequence -- longer clips (8-15s) hold up better for coherent scenes. The generated video is saved to a session-managed directory. After generation, if the video is needed in the project directory (e.g. for a web application), you can copy the file from the session folder. NOTE: Video generation takes significantly longer than image generation (up to several minutes). Example: video_gen(prompt="A golden sunset timelapse over a calm ocean with waves gently lapping the shore", duration=12, aspect_ratio="16:9", resolution="720p")
+
+Generate a video from a text description using the xAI Video Generation API. Returns the absolute path where the video was saved. Duration 1-15 seconds (default 8s). Resolution '480p' or '720p'.
 
 **JSON Schema:**
 ```json
@@ -1102,23 +1036,23 @@ Generate a video from a text description using the xAI Video Generation API. Ret
   "properties": {
     "prompt": {
       "type": "string",
-      "description": "A detailed description of the video to generate. Be specific about the subject, action, scene, camera movement, lighting, and style. Include motion descriptions -- what is moving, how, and where. Do NOT include any text that should appear in the video -- the model cannot render text reliably."
+      "description": "A detailed description of the video to generate."
     },
     "duration": {
       "type": ["integer", "null"],
-      "description": "Length in seconds (1-15). Set this when the user requests a specific length or a scripted sequence; 8-15s produces more coherent scenes than shorter clips. Omitting falls back to the API default (8s).",
       "format": "uint32",
-      "minimum": 0
+      "minimum": 0,
+      "description": "Length in seconds (1-15). Omitting falls back to API default (8s)."
     },
     "aspect_ratio": {
       "type": "string",
       "default": "16:9",
-      "description": "The aspect ratio of the generated video. Default: '16:9'. Supported values: 1:1 (social media, thumbnails), 16:9 / 9:16 (widescreen, mobile, stories), 4:3 / 3:4 (presentations, portraits), 3:2 / 2:3 (photography)."
+      "description": "Supported values: 1:1, 16:9, 9:16, 4:3, 3:4, 3:2, 2:3."
     },
     "resolution": {
       "type": "string",
       "default": "480p",
-      "description": "The resolution of the generated video. Supported values: '480p' (standard, faster processing, default), '720p' (HD quality)."
+      "description": "Supported values: '480p', '720p'."
     }
   }
 }
@@ -1129,16 +1063,8 @@ Generate a video from a text description using the xAI Video Generation API. Ret
 ### 2.21 web_search
 
 **Description:**
+
 Search the web for up-to-date information, tailored for coding and software development tasks.
-
-This tool is primarily designed to help you find third-party libraries and solutions for coding tasks, avoiding the need to reinvent the wheel. It's ideal for:
-- Discovering libraries and packages to solve specific tasks
-- Finding documentation for third-party APIs and frameworks
-- Exploring code examples and integrations
-- Checking for updates on popular libraries and tools
-- The current date is provided in the system prompt. Use the correct year when searching for recent information, documentation, or current events.
-
-Example query: 'How to use Stripe payments in React TypeScript?'.
 
 **JSON Schema:**
 ```json
@@ -1155,7 +1081,7 @@ Example query: 'How to use Stripe payments in React TypeScript?'.
     "allowed_domains": {
       "type": ["array", "null"],
       "items": { "type": "string" },
-      "description": "Optional list of domains to restrict search to. Many API providers have a limit of 5 allowed domains."
+      "description": "Optional list of domains to restrict search to."
     }
   }
 }
@@ -1166,20 +1092,8 @@ Example query: 'How to use Stripe payments in React TypeScript?'.
 ### 2.22 web_fetch
 
 **Description:**
-Fetch the content of a specific URL and return it as markdown.
 
-IMPORTANT: web_fetch WILL FAIL for authenticated or private URLs. Before using this tool, check if the URL points to an authenticated service (e.g. Google Docs, Confluence, Jira, GitHub private repos). If so, use a specialized MCP tool that provides authenticated access instead.
-
-Usage notes:
-- For GitHub URLs, ALWAYS prefer the `gh` CLI or GitHub MCP tools over this tool
-- If an MCP-provided web fetch tool is available for a domain, prefer using that over this tool
-- The URL must be a fully-formed valid URL
-- HTTP URLs will be automatically upgraded to HTTPS
-- This tool is read-only and does not modify any files
-- Content longer than 100,000 characters will be truncated
-- Includes a self-cleaning 15-minute cache; repeated fetches of the same URL are fast
-- Cross-host redirects are not followed automatically; a redirect message is returned so you can make a new web_fetch call with the redirect URL
-- For searching the web by query rather than fetching a known URL, use web_search instead
+Fetch the content of a specific URL and return it as markdown. Will FAIL for authenticated or private URLs. Content longer than 100,000 characters will be truncated. Includes a self-cleaning 15-minute cache. Cross-host redirects are not followed automatically.
 
 **JSON Schema:**
 ```json
@@ -1202,33 +1116,14 @@ Usage notes:
 ### 2.23 enter_plan_mode
 
 **Description:**
-Use this tool when a task has genuine ambiguity about the right approach and getting user input before coding would prevent significant rework. This tool transitions you into plan mode where you can explore the codebase and design an implementation approach for user approval.
 
-When to Use:
-1. **Significant Architectural Ambiguity**: Multiple reasonable approaches exist and the choice meaningfully affects the codebase
-2. **Unclear Requirements**: You need to explore and clarify before you can make progress
-3. **High-Impact Restructuring**: The task will significantly restructure existing code and getting buy-in first reduces risk
-
-When NOT to Use:
-- The task is straightforward even if it touches multiple files
-- The user's request is specific enough that the implementation path is clear
-- Bug fixes where the fix is clear once you understand the bug
-- Research/exploration tasks (use the spawn_subagent tool instead)
-
-In plan mode, you'll:
-1. Thoroughly explore the codebase using list_dir, grep, read_file tools
-2. Understand existing patterns and architecture
-3. Design an implementation approach
-4. Present your plan to the user for approval
-5. Use ask_user_question if you need to clarify approaches
-6. Exit plan mode with exit_plan_mode when ready to implement
+Transitions into plan mode where the agent can explore the codebase and design an implementation approach for user approval. Use when a task has genuine ambiguity about the right approach. In plan mode, the agent can use list_dir, grep, read_file but cannot edit files.
 
 **JSON Schema:**
 ```json
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "EnterPlanModeInput",
-  "description": "Input for the `EnterPlanMode` tool. Empty object -- no parameters.",
   "type": "object",
   "required": [],
   "properties": {}
@@ -1240,24 +1135,14 @@ In plan mode, you'll:
 ### 2.24 exit_plan_mode
 
 **Description:**
-Exit plan mode and present plan for user approval.
 
-Use this tool when you are in plan mode and have finished writing your plan to the plan file and are ready for user approval.
-
-- You should have already written your plan to the plan file specified in the plan mode system message
-- This tool does NOT take the plan content as a parameter -- it will read the plan from the file you wrote
-- This tool simply signals that you're done planning and ready for the user to review and approve
-- The user will see the contents of your plan file when they review it
-
-When to Use:
-IMPORTANT: Only use this tool when the task requires planning the implementation steps of a task that requires writing code. For research tasks where you're gathering information, searching files, reading files or in general trying to understand the codebase -- do NOT use this tool.
+Exit plan mode and present plan for user approval. The plan is read from the plan file on disk, NOT passed as a parameter.
 
 **JSON Schema:**
 ```json
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "ExitPlanModeInput",
-  "description": "Input for the `ExitPlanMode` tool. Empty object -- the plan is read from the plan file on disk, NOT passed as a parameter.",
   "type": "object",
   "required": [],
   "properties": {}
@@ -1269,20 +1154,8 @@ IMPORTANT: Only use this tool when the task requires planning the implementation
 ### 2.25 ask_user_question
 
 **Description:**
-Ask the user a question and present options.
 
-Use this tool when you need to ask the user questions during execution. This allows you to:
-1. Gather user preferences or requirements
-2. Clarify ambiguous instructions
-3. Get decisions on implementation choices as you work
-4. Offer choices to the user about what direction to take
-
-Usage notes:
-- Users will always be able to select "Other" to provide custom text input
-- Use multiSelect: true to allow multiple answers to be selected for a question
-- If you recommend a specific option, make that the first option in the list and add "(Recommended)" at the end of the label
-
-Plan mode note: In plan mode, use this tool to clarify requirements or choose between approaches BEFORE finalizing your plan. Do NOT use this tool to ask "Is my plan ready?" or "Should I proceed?" -- use exit_plan_mode for plan approval.
+Ask the user a question and present selectable options. Users can always select "Other" to provide custom text input. Use multiSelect: true for multiple selections.
 
 **JSON Schema:**
 ```json
@@ -1294,35 +1167,32 @@ Plan mode note: In plan mode, use this tool to clarify requirements or choose be
   "properties": {
     "questions": {
       "type": "array",
-      "description": "Array of questions to ask the user. Each question has its own set of options.",
+      "description": "Array of questions to ask the user.",
       "items": {
         "type": "object",
         "required": ["question", "options"],
-        "description": "A single question with its options.",
         "properties": {
           "question": {
             "type": "string",
-            "description": "The complete question to ask the user. Should be clear, specific, and end with a question mark."
+            "description": "The complete question to ask the user."
           },
           "options": {
             "type": "array",
-            "description": "Array of options for the user to choose from",
             "items": {
               "type": "object",
               "required": ["label", "description"],
-              "description": "A single option within a question.",
               "properties": {
                 "label": {
                   "type": "string",
-                  "description": "The display text for this option that the user will see and select. Should be concise (1-5 words) and clearly describe the choice."
+                  "description": "The display text for this option (1-5 words)."
                 },
                 "description": {
                   "type": "string",
-                  "description": "Explanation of what this option means or what will happen if chosen."
+                  "description": "Explanation of what this option means."
                 },
                 "preview": {
                   "type": ["string", "null"],
-                  "description": "Optional preview content rendered when this option is focused. Use for mockups, code snippets, or visual comparisons."
+                  "description": "Optional preview content rendered when this option is focused."
                 }
               }
             }
@@ -1330,7 +1200,7 @@ Plan mode note: In plan mode, use this tool to clarify requirements or choose be
           "multiSelect": {
             "type": ["boolean", "null"],
             "default": null,
-            "description": "If true, the user can select multiple options. Default is false (single select)."
+            "description": "If true, the user can select multiple options."
           }
         }
       }
@@ -1344,12 +1214,8 @@ Plan mode note: In plan mode, use this tool to clarify requirements or choose be
 ### 2.26 update_goal
 
 **Description:**
-Update goal progress. Use completed: true when the goal is achieved. Use message to log progress. Use blocked_reason only when truly stuck after multiple attempts.
 
-Examples:
-- Status update while working: `update_goal(message: "Running tests...")`
-- When the goal is fully achieved: `update_goal(completed: true, message: "All tests pass, feature implemented")`
-- When truly stuck after multiple failed attempts: `update_goal(blocked_reason: "Cannot install dependency -- missing system library")`
+Update goal progress. Use `completed: true` when the goal is achieved. Use `message` to log progress. Use `blocked_reason` only when truly stuck after 3+ consecutive failed attempts.
 
 **JSON Schema:**
 ```json
@@ -1362,17 +1228,17 @@ Examples:
     "message": {
       "type": ["string", "null"],
       "default": null,
-      "description": "Optional short message logged as progress (visible in tool response, not surfaced to the pager dashboard). Use with `completed: true` for a completion summary."
+      "description": "Optional short message logged as progress."
     },
     "completed": {
       "type": ["boolean", "null"],
       "default": null,
-      "description": "Set to true ONLY when the goal is fully achieved. This ends goal mode. Use together with `message` to include a completion summary."
+      "description": "Set to true ONLY when the goal is fully achieved."
     },
     "blocked_reason": {
       "type": ["string", "null"],
       "default": null,
-      "description": "Set only when truly stuck after 3+ consecutive failed attempts at the same problem. If set, the goal is paused as blocked. This is a FAILURE signal -- never put success text here."
+      "description": "Set only when truly stuck after 3+ consecutive failed attempts."
     }
   }
 }
@@ -1382,12 +1248,7 @@ Examples:
 
 ## 3. Runtime-Injected Context
 
-In addition to the core system prompt and tool schemas, Grok Build injects several additional context
-blocks into each session via `<system-reminder>` tags. These are dynamic and vary per session.
-
 ### 3.1 User Instructions (Claude.md / AGENTS.md)
-
-Project instruction files (`AGENTS.md`, `Claude.md`, etc.) are read from the workspace and injected:
 
 ```
 <system-reminder>
@@ -1401,9 +1262,6 @@ As you answer the user's questions, you can use the following context
 
 ### 3.2 Available Skills Manifest
 
-A manifest of all discovered skills (from `~/.grok/skills/`, `~/.claude/skills/`, `~/.agents/skills/`,
-`~/.grok/bundled/skills/`) is injected:
-
 ```
 <system-reminder>
 The following skills are available for use:
@@ -1414,15 +1272,13 @@ The following skills are available for use:
 </system-reminder>
 ```
 
-Skills are defined in SKILL.md files at these locations:
-- `~/.grok/skills/<name>/SKILL.md` -- User-installed skills
-- `~/.grok/bundled/skills/<name>/SKILL.md` -- Bundled skills (implement, design, review, check, best-of-n, pr-babysit, help)
-- `~/.claude/skills/<name>/SKILL.md` -- Claude Code skills (compatible)
-- `~/.agents/skills/<name>/SKILL.md` -- Agent-specific skills
+Skill locations:
+- `~/.grok/skills/<name>/SKILL.md`
+- `~/.grok/bundled/skills/<name>/SKILL.md`
+- `~/.claude/skills/<name>/SKILL.md`
+- `~/.agents/skills/<name>/SKILL.md`
 
 ### 3.3 MCP Servers Announcement
-
-Connected MCP servers and their tool counts are announced:
 
 ```
 <system-reminder>
@@ -1434,8 +1290,6 @@ MCP servers connected:
 
 ### 3.4 User Query Wrapper
 
-Each user message is wrapped in:
-
 ```
 <user_query>
 The actual user message
@@ -1444,8 +1298,6 @@ The actual user message
 
 ### 3.5 User Info Block
 
-Session metadata about the user's environment:
-
 ```
 <user_info>
 OS Version: macos
@@ -1453,43 +1305,3 @@ Shell: /bin/zsh
 Workspace Path: /path/to/workspace
 </user_info>
 ```
-
----
-
-## 4. Errors in the Previous Dump
-
-The prior version of this file (produced by a lower-capability model) contained these errors:
-
-### 4.1 Hallucinated Content (from Grok chat, NOT Grok Build)
-
-| Lines (old) | Content | Source |
-|---|---|---|
-| 63-69 | "Additional Strong Rules" -- jailbreak refusal, adult content policy, KaTeX requirement, language/dialect matching | Grok chat (grok.com) system prompt |
-| 225-230 | `open_page`, `open_page_with_find` tool descriptions | Grok chat tools -- do NOT exist in Grok Build |
-| 232-246 | `x_keyword_search`, `x_semantic_search`, `x_user_search`, `x_thread_fetch` tool descriptions | Grok chat X/Twitter tools -- do NOT exist in Grok Build |
-| 441-449 | "Render Components" / `render_inline_citation` | Grok chat citation system -- does NOT exist in Grok Build |
-
-### 4.2 Missing Tools
-
-These real Grok Build tools were completely absent from the previous dump:
-
-| Tool | Purpose |
-|---|---|
-| `enter_plan_mode` | Enter read-only planning phase for ambiguous tasks |
-| `exit_plan_mode` | Present plan for user approval |
-| `ask_user_question` | Ask user questions with selectable options |
-| `update_goal` | Update goal progress, mark complete, or flag blocked |
-
-### 4.3 Missing JSON Schemas
-
-The previous dump had paraphrased tool descriptions but **zero JSON schemas**. All 26 tool schemas
-are now included above.
-
-### 4.4 Structural Issues
-
-- XML-style tags (`<tool_calling>`, `<making_code_changes>`, etc.) were stripped and content
-  reformatted into markdown sections, losing the original structure
-- The "Available Tools" list was duplicated (appeared twice)
-- Lines 500-3000+: Full content of bundled skill SKILL.md files (check, best-of-n, design,
-  implement, review, pr-babysit) was dumped verbatim. These are separate files in `~/.grok/bundled/skills/`
-  and `~/.grok/skills/`, not part of the system prompt itself.
