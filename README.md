@@ -1,4 +1,4 @@
-> 📰 **As seen in The Washington Post:** [See the hidden rules behind AI. Then use them to rewrite this article.](https://wapo.st/49t4gSb) (May 11, 2026)
+> **As seen in The Washington Post:** [See the hidden rules behind AI. Then use them to rewrite this article.](https://wapo.st/49t4gSb) (May 11, 2026)
 # System Prompts Leaks
 
 <img alt="ChatGPT leaking its system prompt after being asked to repeat all of the above" src="https://github.com/user-attachments/assets/0037a6c5-2ae4-4d34-8be0-0d679773172b" />
@@ -12,10 +12,11 @@
 
 
 
-## 🔥 Recently Updated
+## Recently Updated
 
 | What | Date | Link |
 |------|------|------|
+| **Claude Code & Cowork** | May 28, 2026 | [Claude Code](Anthropic/claude-code.md) · [Cowork](Anthropic/claude-cowork.md) · [Cowork Dispatch](Anthropic/claude-cowork-dispatch.md) |
 | **GPT-5.5** | May 24, 2026 | [Thinking](OpenAI/gpt-5.5-thinking.md) · [Instant](OpenAI/gpt-5.5-instant.md) · [API](OpenAI/gpt-5.5-api.md) · [Pro API](OpenAI/gpt-5.5-pro-api.md) |
 | **Perplexity Computer** | May 21, 2026 | [System prompt](Perplexity/perplexity-computer.md) |
 | **VS Code Copilot Agent** | May 21, 2026 | [System prompt](Misc/vscode-copilot-agent.md) |
@@ -36,7 +37,7 @@
 | **Claude Opus 4.7** | [**System prompt**](Anthropic/claude-opus-4.7.md) |
 | **Claude Opus 4.6** | [**System prompt**](Anthropic/claude-opus-4.6.md) |
 | **Claude Sonnet 4.6** | [**System prompt**](Anthropic/claude-sonnet-4.6.md) |
-| Claude.ai | [Human-readable](Anthropic/claude.ai-human-readable.md) · [Injections](Anthropic/claude.ai-injections.md) |
+| Claude.ai | [Human-readable](Anthropic/claude.ai-human-readable.md) · [Anthropic Reminders](Anthropic/anthropic_reminders.md) |
 | Claude Code | [System prompt](Anthropic/claude-code.md) |
 | Official Docs | [Opus 4.7](Anthropic/Official/claude-opus-4.7.md) · [Opus 4.6](Anthropic/Official/claude-opus-4.6.md) · [Sonnet 4.6](Anthropic/Official/claude-sonnet-4.6.md) |
 
@@ -44,7 +45,7 @@
 
 | | |
 |--|--|
-| Integrations | [Cowork](Anthropic/claude-cowork.md) · [Desktop Code](Anthropic/claude-desktop-code.md) · [Design](Anthropic/claude-design.md) · [Mobile iOS](Anthropic/claude-mobile-ios.md) · [In Chrome](Anthropic/claude-in-chrome.md) · [For Excel](Anthropic/claude-for-excel.md) · [For Word](Anthropic/claude-for-word.md) · [In PowerPoint](Anthropic/claude-in-powerpoint.md) · [Default Styles](Anthropic/default-styles.md) |
+| Integrations | [Cowork](Anthropic/claude-cowork.md) · [Cowork Dispatch](Anthropic/claude-cowork-dispatch.md) · [Desktop Code](Anthropic/claude-desktop-code.md) · [Design](Anthropic/claude-design.md) · [Mobile iOS](Anthropic/claude-mobile-ios.md) · [In Chrome](Anthropic/claude-in-chrome.md) · [For Excel](Anthropic/claude-for-excel.md) · [For Word](Anthropic/claude-for-word.md) · [In PowerPoint](Anthropic/claude-in-powerpoint.md) · [Default Styles](Anthropic/default-styles.md) |
 | Without tools | [Opus 4.6](Anthropic/claude-opus-4.6-no-tools.md) · [Sonnet 4.6](Anthropic/claude-sonnet-4.6-no-tools.md) |
 | Raw prompts | [Opus 4.6](Anthropic/raw/claude-opus-4.6-raw.md) · [Opus 4.6 (no tools)](Anthropic/raw/claude-opus-4.6-no-tools-raw.md) · [Sonnet 4.6](Anthropic/raw/claude-sonnet-4.6-raw.md) · [Sonnet 4.6 (no tools)](Anthropic/raw/claude-sonnet-4.6-no-tools-raw.md) |
 | Visualize | [Visualization](Anthropic/visualize.md) |
@@ -123,7 +124,7 @@
 
 | Model | Prompt |
 |-------|--------|
-| **Grok 4.3** | [**System prompt (CLI Agent)**](xAI/grok-4.3.md) |
+| **Grok Build** | [**System prompt (CLI Agent)**](xAI/grok-build.md) |
 | **Grok 4.3 Beta** | [System prompt](xAI/grok-4.3-beta.md) |
 | **Grok 4.2** | [**System prompt**](xAI/grok-4.2.md) |
 | Grok Expert | [System prompt](xAI/grok-expert.md) |
@@ -156,12 +157,14 @@
 | Amp Code (Sourcegraph) | [System prompt](Misc/amp-code.md) |
 | Cursor | [System prompt](Misc/cursor.md) |
 | Docker Gordon AI | [System prompt](Misc/docker-gordon-ai.md) |
+| ElevenLabs Voice Agent | [System prompt](Misc/elevenlabs-voice-agent.md) |
 | GitHub Copilot CLI | [System prompt](Misc/copilot-cli.md) |
 | Le Chat (Mistral) | [System prompt](Misc/le-chat.md) |
 | Meta AI | [System prompt](Misc/meta-ai.md) |
 | Notion AI | [System prompt](Misc/notion-ai.md) |
 | OpenCode | [System prompt](Misc/opencode.md) |
 | Qwen 3.6 Plus | [System prompt](Misc/qwen-3.6-plus.md) |
+| Reddit Answers | [System prompt](Misc/reddit-answers.md) |
 | VS Code Copilot Agent | [System prompt](Misc/vscode-copilot-agent.md) |
 | Warp 2.0 Agent | [System prompt](Misc/warp-2.0-agent.md) |
 | Zed AI | [System prompt](Misc/zed.md) |
@@ -174,7 +177,6 @@
 | Character AI | [System prompt](Misc/character-ai.md) |
 | Confer | [System prompt](Misc/confer.md) |
 | Fellou Browser | [System prompt](Misc/fellou-browser.md) |
-| Flint K12 | [System prompt](Anthropic/FlintK12/prompt.md) · [Tools](Anthropic/FlintK12/tools.md) · [User info](Anthropic/FlintK12/user-info.md) |
 | Gizmo AI | [System prompt](Misc/gizmo-ai.md) |
 | GitHub Copilot (Word) | [System prompt](Misc/copilot-in-microsoft-word.md) |
 | Hermes | [System prompt](Misc/hermes.md) |
