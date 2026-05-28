@@ -16,6 +16,7 @@
 
 | What | Date | Link |
 |------|------|------|
+| **Claude Opus 4.8** | May 28, 2026 | [System prompt](Anthropic/claude-opus-4.8.md) · [Claude Code](Anthropic/claude-code-opus-4.8.md) |
 | **Claude Code & Cowork** | May 28, 2026 | [Claude Code](Anthropic/claude-code.md) · [Cowork](Anthropic/claude-cowork.md) · [Cowork Dispatch](Anthropic/claude-cowork-dispatch.md) |
 | **GPT-5.5** | May 24, 2026 | [Thinking](OpenAI/gpt-5.5-thinking.md) · [Instant](OpenAI/gpt-5.5-instant.md) · [API](OpenAI/gpt-5.5-api.md) · [Pro API](OpenAI/gpt-5.5-pro-api.md) |
 | **Perplexity Computer** | May 21, 2026 | [System prompt](Perplexity/perplexity-computer.md) |
@@ -34,6 +35,8 @@
 
 | Model | Prompt |
 |-------|--------|
+| **Claude Opus 4.8** | [**System prompt**](Anthropic/claude-opus-4.8.md) |
+| **Claude Code (Opus 4.8)** | [**System prompt**](Anthropic/claude-code-opus-4.8.md) |
 | **Claude Opus 4.7** | [**System prompt**](Anthropic/claude-opus-4.7.md) |
 | **Claude Code** | [**System prompt**](Anthropic/claude-code.md) |
 | **Claude Opus 4.6** | [**System prompt**](Anthropic/claude-opus-4.6.md) |
