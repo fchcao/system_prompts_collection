@@ -35,17 +35,17 @@
 | Model | Prompt |
 |-------|--------|
 | **Claude Opus 4.7** | [**System prompt**](Anthropic/claude-opus-4.7.md) |
+| **Claude Code** | [**System prompt**](Anthropic/claude-code.md) |
 | **Claude Opus 4.6** | [**System prompt**](Anthropic/claude-opus-4.6.md) |
 | **Claude Sonnet 4.6** | [**System prompt**](Anthropic/claude-sonnet-4.6.md) |
-| Claude.ai | [Human-readable](Anthropic/claude.ai-human-readable.md) · [Anthropic Reminders](Anthropic/anthropic_reminders.md) |
-| Claude Code | [System prompt](Anthropic/claude-code.md) |
-| Official Docs | [Opus 4.7](Anthropic/Official/claude-opus-4.7.md) · [Opus 4.6](Anthropic/Official/claude-opus-4.6.md) · [Sonnet 4.6](Anthropic/Official/claude-sonnet-4.6.md) |
+| Claude.ai | [Anthropic Reminders](Anthropic/anthropic_reminders.md) |
 
-<details><summary>Integrations & older versions</summary>
+<details><summary>Integrations, official prompts & older versions</summary>
 
 | | |
 |--|--|
 | Integrations | [Cowork](Anthropic/claude-cowork.md) · [Cowork Dispatch](Anthropic/claude-cowork-dispatch.md) · [Desktop Code](Anthropic/claude-desktop-code.md) · [Design](Anthropic/claude-design.md) · [Mobile iOS](Anthropic/claude-mobile-ios.md) · [In Chrome](Anthropic/claude-in-chrome.md) · [For Excel](Anthropic/claude-for-excel.md) · [For Word](Anthropic/claude-for-word.md) · [In PowerPoint](Anthropic/claude-in-powerpoint.md) · [Default Styles](Anthropic/default-styles.md) |
+| Published (`claude_behavior` at release date, not updated) | [Opus 4.7](Anthropic/Official/claude-opus-4.7.md) · [Opus 4.6](Anthropic/Official/claude-opus-4.6.md) · [Sonnet 4.6](Anthropic/Official/claude-sonnet-4.6.md) |
 | Without tools | [Opus 4.6](Anthropic/claude-opus-4.6-no-tools.md) · [Sonnet 4.6](Anthropic/claude-sonnet-4.6-no-tools.md) |
 | Raw prompts | [Opus 4.6](Anthropic/raw/claude-opus-4.6-raw.md) · [Opus 4.6 (no tools)](Anthropic/raw/claude-opus-4.6-no-tools-raw.md) · [Sonnet 4.6](Anthropic/raw/claude-sonnet-4.6-raw.md) · [Sonnet 4.6 (no tools)](Anthropic/raw/claude-sonnet-4.6-no-tools-raw.md) |
 | Visualize | [Visualization](Anthropic/visualize.md) |
@@ -201,7 +201,7 @@ Want a specific model or product added? [Open an issue](https://github.com/asgei
 
 ## License
 
-Released under the [MIT License](LICENSE).
+Released under [CC0 1.0 Universal](LICENSE) — public domain.
 
 ## Star History
 
