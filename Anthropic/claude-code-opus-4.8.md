@@ -1,13 +1,13 @@
 ## Contents
 
-- [System Prompt](#system-prompt)
-  - [Harness](#harness)
-  - [Session-specific guidance](#session-specific-guidance)
-  - [Memory](#memory)
-  - [Environment](#environment)
-  - [Context management](#context-management)
-  - [Claude in Chrome browser automation](#claude-in-chrome-browser-automation)
-- [Tools](#tools)
+- [System Prompt](#system-prompt)  
+  - [Harness](#harness)  
+  - [Session-specific guidance](#session-specific-guidance)  
+  - [Memory](#memory)  
+  - [Environment](#environment)  
+  - [Context management](#context-management)  
+  - [Claude in Chrome browser automation](#claude-in-chrome-browser-automation)  
+- [Tools](#tools)  
   - [Agent](#agent) · [AskUserQuestion](#askuserquestion) · [Bash](#bash) · [Edit](#edit) · [Read](#read) · [ScheduleWakeup](#schedulewakeup) · [SendUserFile](#senduserfile) · [Skill](#skill) · [ToolSearch](#toolsearch) · [Workflow](#workflow) · [Write](#write)
 
 ---
@@ -66,7 +66,7 @@ mcp__claude-in-chrome__upload_image
 
 The following MCP servers have provided instructions for how to use their tools and resources:
 
-## claude-in-chrome  
+## claude-in-chrome
 
 **IMPORTANT: Before using any chrome browser tools, you MUST first load them using ToolSearch.**
 
@@ -93,7 +93,7 @@ The following skills are available for use with the Skill tool:
 - fewer-permission-prompts: Scan your transcripts for common read-only Bash and MCP tool calls, then add a prioritized allowlist to project .claude/settings.json to reduce permission prompts.  
 - loop: Run a prompt or slash command on a recurring interval (e.g. /loop 5m /foo). Omit the interval to let the model self-pace. - When the user wants to set up a recurring task, poll for status, or run something repeatedly on an interval (e.g. "check the deploy every 5 minutes", "keep running /babysit-prs"). Do NOT invoke for one-off tasks.  
 - schedule: Create, update, list, or run scheduled remote agents (routines) that execute on a cron schedule. - When the user wants to schedule a recurring remote agent, set up automated tasks, create a cron job for Claude Code, or manage their scheduled agents/routines. Also use when the user wants a one-time scheduled run ("run this once at 3pm", "remind me to check X tomorrow").  
-- claude-api: Build, debug, and optimize Claude API / Anthropic SDK apps. Apps built with this skill should include prompt caching. Also handles migrating existing Claude API code between Claude model versions (4.5 → 4.6, 4.6 → 4.7, retired-model replacements).  
+- claude-api: Build, debug, and optimize Claude API / Anthropic SDK apps. Apps built with this skill should include prompt caching. Also handles migrating existing Claude API code between Claude model versions (4.5 → 4.6, 4.6 → 4.7, retired-model replacements).
 
 TRIGGER when: code imports `anthropic`/`@anthropic-ai/sdk`; user asks for the Claude API, Anthropic SDK, or Managed Agents; user adds/modifies/tunes a Claude feature (caching, thinking, compaction, tool use, batch, files, citations, memory) or model (Opus/Sonnet/Haiku) in a file; questions about prompt caching / cache hit rate in an Anthropic SDK project.  
 SKIP: file imports `openai`/other-provider SDK, filename like `*-openai.py`/`*-generic.py`, provider-neutral code, general programming/ML.  
@@ -105,11 +105,13 @@ SKIP: file imports `openai`/other-provider SDK, filename like `*-openai.py`/`*-g
 `</system-reminder>`
 
 `<system-reminder>`
+
 As you answer the user's questions, you can use the following context:  
 # currentDate  
 Today's date is 2026-05-28.
 
 IMPORTANT: this context may or may not be relevant to your tasks. You should not respond to this context unless it is highly relevant to your task.  
+
 `</system-reminder>`
 
 # System Prompt
@@ -138,7 +140,7 @@ For actions that are hard to reverse or outward-facing, confirm first unless dur
 
 You have a persistent file-based memory at `/Users/asgeirtj/.claude/projects/-Users-asgeirtj-Projects-system-prompts-leaks/memory/`. This directory already exists — write to it directly with the Write tool (do not run mkdir or check for its existence). Each memory is one file holding one fact, with frontmatter:
 
-~~~  
+
 ```markdown
 ---
 name: <short-kebab-case-slug>
@@ -149,7 +151,6 @@ metadata:
 
 <the fact; for feedback/project, follow with **Why:** and **How to apply:** lines. Link related memories with [[their-name]].>
 ```
-~~~
 
 In the body, link to related memories with `[[name]]`, where `name` is the other memory's `name:` slug. Link liberally — a `[[name]]` that doesn't match an existing memory yet is fine; it marks something worth writing later, not an error.
 
