@@ -4,7 +4,9 @@ Thanks for helping grow this collection! Here's how to contribute.
 
 ## Adding a system prompt
 
-1. Pick the right folder:
+1. Fork this repo and clone your fork.
+
+2. Pick the right folder:
    - `Anthropic/` — Claude models
    - `OpenAI/` — ChatGPT, GPT, o-series, Codex
    - `Google/` — Gemini models
@@ -12,11 +14,11 @@ Thanks for helping grow this collection! Here's how to contribute.
    - `Perplexity/` — Perplexity models
    - `Misc/` — everything else
 
-2. Create a `.md` file with a descriptive name (e.g. `gpt-5.4-thinking.md`, `gemini-3-flash.md`)
+3. Create a `.md` file with a descriptive name matching the model or product.
 
-3. Paste the raw system prompt as-is. Don't summarize or paraphrase — the full, unedited text is the point.
+4. Paste the raw system prompt as-is. Don't summarize or paraphrase — the full, unedited text is the point.
 
-4. Open a PR. That's it.
+5. Commit, push to your fork, and open a PR back to this repo.
 
 ## Requesting a prompt
 
