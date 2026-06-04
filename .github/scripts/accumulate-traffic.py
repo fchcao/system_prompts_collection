@@ -96,6 +96,11 @@ def build_dashboard(publish_dir, ref_history, path_history):
         f.write(html)
     print(f"Dashboard written to {out_path}")
 
+    redirect = '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0;url=https://github.com/asgeirtj/system_prompts_leaks"><link rel="canonical" href="https://github.com/asgeirtj/system_prompts_leaks"></head></html>'
+    with open(os.path.join(publish_dir, "index.html"), "w") as f:
+        f.write(redirect)
+    print("Root redirect written")
+
 DASHBOARD_TEMPLATE = r"""<!DOCTYPE html>
 <html lang="en">
 <head>
