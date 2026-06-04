@@ -25,7 +25,6 @@ def load_json(path):
         return None
 
 def fetch_from_branch(publish_dir, filename):
-    """Try to fetch a file from the traffic branch via git."""
     full = f"{TRAFFIC_DIR}/{filename}"
     try:
         raw = subprocess.check_output(
@@ -103,81 +102,77 @@ DASHBOARD_TEMPLATE = r"""<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>system_prompts_leaks — Traffic Dashboard</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='1' x2='1' y2='0'%3E%3Cstop offset='0%25' stop-color='%236366f1'/%3E%3Cstop offset='100%25' stop-color='%23818cf8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Cpath d='M16 44 L26 32 L34 38 L48 20' stroke='%23fff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Ccircle cx='48' cy='20' r='4' fill='%23fbbf24'/%3E%3Crect x='14' y='48' width='6' height='4' rx='1' fill='rgba(255,255,255,0.5)'/%3E%3Crect x='23' y='46' width='6' height='6' rx='1' fill='rgba(255,255,255,0.5)'/%3E%3Crect x='32' y='44' width='6' height='8' rx='1' fill='rgba(255,255,255,0.5)'/%3E%3Crect x='41' y='42' width='6' height='10' rx='1' fill='rgba(255,255,255,0.5)'/%3E%3C/svg%3E">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='1' x2='1' y2='0'%3E%3Cstop offset='0%25' stop-color='%236366f1'/%3E%3Cstop offset='100%25' stop-color='%23818cf8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Cpath d='M16 44 L26 32 L34 38 L48 20' stroke='%23fff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Ccircle cx='48' cy='20' r='4' fill='%23fbbf24'/%3E%3C/svg%3E">
+<script src="https://cdn.jsdelivr.net/npm/apexcharts@4/dist/apexcharts.min.js"></script>
 <style>
-  :root {
-    --bg: #fafafa; --card: #fff; --border: #e5e7eb; --text: #1a1a2e;
-    --text2: #6b7280; --accent: #6366f1; --accent2: #f59e0b;
-    --accent3: #10b981; --accent4: #ef4444; --shadow: rgba(0,0,0,0.06);
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #0f0f1a; --card: #1a1a2e; --border: #2d2d44; --text: #e5e5ef;
-      --text2: #9ca3af; --accent: #818cf8; --accent2: #fbbf24;
-      --accent3: #34d399; --accent4: #f87171; --shadow: rgba(0,0,0,0.3);
-    }
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); padding: 24px; max-width: 1200px; margin: 0 auto; }
-  h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; }
-  .subtitle { color: var(--text2); font-size: 0.875rem; margin-bottom: 24px; }
-  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-  .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px var(--shadow); }
-  .stat-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text2); margin-bottom: 4px; }
-  .stat-value { font-size: 1.75rem; font-weight: 700; }
-  .stat-sub { font-size: 0.8rem; color: var(--text2); margin-top: 2px; }
-  .chart-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 3px var(--shadow); }
-  .chart-title { font-size: 1rem; font-weight: 600; margin-bottom: 12px; }
-  .chart-wrap { position: relative; height: 300px; }
-  .tables-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-  @media (max-width: 768px) { .tables-row { grid-template-columns: 1fr; } }
-  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-  th { text-align: left; padding: 8px 12px; border-bottom: 2px solid var(--border); color: var(--text2); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.03em; }
-  td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
-  tr:last-child td { border-bottom: none; }
-  .rank { color: var(--text2); font-weight: 500; width: 30px; }
-  .bar-cell { position: relative; }
-  .bar-bg { position: absolute; left: 0; top: 4px; bottom: 4px; border-radius: 4px; opacity: 0.15; }
-  .path-text { max-width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.8rem; }
-  .delta { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; font-weight: 600; margin-left: 6px; }
-  .delta-up { background: rgba(16,185,129,0.15); color: var(--accent3); }
-  .delta-down { background: rgba(239,68,68,0.15); color: var(--accent4); }
-  .section-title { font-size: 1.1rem; font-weight: 700; margin: 28px 0 12px; }
+  :root { --bg:#fafafa;--card:#fff;--border:#e5e7eb;--text:#111827;--text2:#6b7280;--shadow:0 1px 3px rgba(0,0,0,0.06); }
+  @media(prefers-color-scheme:dark){ :root { --bg:#0b0f19;--card:#141927;--border:#1e293b;--text:#e2e8f0;--text2:#94a3b8;--shadow:0 1px 3px rgba(0,0,0,0.4); } }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);padding:20px 24px;max-width:1280px;margin:0 auto}
+  .header{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
+  h1{font-size:1.4rem;font-weight:800;letter-spacing:-0.02em}
+  .subtitle{color:var(--text2);font-size:.8rem;margin-bottom:20px}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px}
+  .stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;box-shadow:var(--shadow)}
+  .stat-label{font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text2);font-weight:600}
+  .stat-val{font-size:1.6rem;font-weight:800;margin:2px 0;letter-spacing:-0.02em}
+  .stat-sub{font-size:.75rem;color:var(--text2)}
+  .trend-up{color:#10b981}.trend-down{color:#ef4444}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 16px 8px;margin-bottom:16px;box-shadow:var(--shadow)}
+  .card-title{font-size:.85rem;font-weight:700;margin-bottom:8px;letter-spacing:-0.01em}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:768px){.grid-2{grid-template-columns:1fr}}
+  .section{font-size:.9rem;font-weight:700;margin:24px 0 10px;letter-spacing:-0.01em}
+  table{width:100%;border-collapse:collapse;font-size:.8rem}
+  th{text-align:left;padding:6px 10px;border-bottom:2px solid var(--border);color:var(--text2);font-weight:700;font-size:.65rem;text-transform:uppercase;letter-spacing:.04em}
+  td{padding:6px 10px;border-bottom:1px solid var(--border)}
+  tr:last-child td{border-bottom:none}
+  .mono{font-family:'SF Mono','Fira Code','Cascadia Code',monospace;font-size:.75rem}
+  .bar-wrap{position:relative}
+  .bar-fill{position:absolute;left:0;top:2px;bottom:2px;border-radius:3px;opacity:.12}
+  .badge{display:inline-block;font-size:.6rem;padding:1px 5px;border-radius:4px;font-weight:700;margin-left:4px}
+  .badge-up{background:rgba(16,185,129,.15);color:#10b981}
+  .badge-down{background:rgba(239,68,68,.15);color:#ef4444}
+  .badge-new{background:rgba(99,102,241,.15);color:#6366f1}
+  .drill-info{text-align:center;font-size:.75rem;color:var(--text2);margin-top:4px}
 </style>
 </head>
 <body>
-<h1>system_prompts_leaks</h1>
-<p class="subtitle">Traffic history — auto-updated daily from the <code>traffic</code> branch</p>
-<div class="stats-row" id="stats"></div>
-<div class="chart-card"><div class="chart-title">Daily Views</div><div class="chart-wrap"><canvas id="viewsChart"></canvas></div></div>
-<div class="chart-card"><div class="chart-title">Daily Clones</div><div class="chart-wrap"><canvas id="clonesChart"></canvas></div></div>
-<div class="section-title">Top Pages &amp; Referrers (latest 14-day window)</div>
-<div class="tables-row">
-  <div class="chart-card" style="margin-bottom:0"><div class="chart-title">Top Pages</div><table id="pathsTable"></table></div>
-  <div class="chart-card" style="margin-bottom:0"><div class="chart-title">Top Referrers (current window)</div><table id="referrersTable"></table></div>
+<div class="header">
+  <h1>system_prompts_leaks</h1>
 </div>
-<div class="section-title">All Referrers (union across all snapshots — peak 14-day count per source)</div>
-<div class="chart-card"><table id="allReferrersTable"></table></div>
-<div class="section-title">Referrer Trends (14-day rolling windows)</div>
-<div class="chart-card"><div class="chart-title">Top Referrer Counts Over Time</div><div class="chart-wrap"><canvas id="refChart"></canvas></div></div>
-<div class="chart-card"><div class="chart-title">Top Pages Over Time</div><div class="chart-wrap"><canvas id="pathsChart"></canvas></div></div>
+<p class="subtitle">Traffic dashboard — auto-updated daily from the <code>traffic</code> branch</p>
+<div class="stats" id="stats"></div>
+<div class="card"><div class="card-title">Daily Views</div><div id="viewsChart"></div><p class="drill-info">Drag to zoom — click Reset to restore</p></div>
+<div class="card"><div class="card-title">Daily Clones</div><div id="clonesChart"></div></div>
+<div class="grid-2">
+  <div class="card"><div class="card-title">Top Pages (14-day window)</div><table id="pathsTable"></table></div>
+  <div class="card"><div class="card-title">Top Referrers (14-day window)</div><table id="refsTable"></table></div>
+</div>
+<p class="section">All Referrers — peak 14-day count per source across all snapshots</p>
+<div class="card"><div id="allRefsChart"></div></div>
+<p class="section">Referrer Trends</p>
+<div class="card"><div id="refTrendChart"></div></div>
+<p class="section">Page Trends</p>
+<div class="card"><div id="pathTrendChart"></div></div>
+<p class="section">Day Detail</p>
+<div class="card"><div class="card-title" id="dayDetailTitle">Click a day on the views chart to see that day's breakdown</div><div id="dayDetail" style="min-height:60px"></div></div>
+
 <script>
 const DATA = __DATA_PLACEHOLDER__;
-const fmt = n => n.toLocaleString();
-const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-const gridColor = dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
-const tickColor = dark ? '#9ca3af' : '#6b7280';
+const fmt = n => n != null ? n.toLocaleString() : '-';
 const colors = ['#6366f1','#f59e0b','#10b981','#ef4444','#8b5cf6','#ec4899','#14b8a6','#f97316','#06b6d4','#84cc16','#a855f7','#fb923c','#2dd4bf','#f43f5e','#facc15','#38bdf8'];
 
+let isDark = window.matchMedia('(prefers-color-scheme:dark)').matches;
+function apexTheme() { return isDark ? 'dark' : 'light'; }
+
 function shortenPath(p) {
-  const base = p.replace('/asgeirtj/system_prompts_leaks', '');
-  if (!base) return 'Overview (repo landing)';
-  if (base === '/tree/main') return '/ (root directory)';
-  if (base.startsWith('/tree/main/')) return base.replace('/tree/main/', '') + '/';
-  if (base.startsWith('/blob/main/')) return base.replace('/blob/main/', '');
-  return base;
+  const b = p.replace('/asgeirtj/system_prompts_leaks', '');
+  if (!b) return 'Overview';
+  if (b === '/tree/main') return '/ (root)';
+  if (b.startsWith('/tree/main/')) return b.replace('/tree/main/', '') + '/';
+  if (b.startsWith('/blob/main/')) return b.replace('/blob/main/', '');
+  return b;
 }
 
 const views = DATA.views, clones = DATA.clones;
@@ -185,102 +180,155 @@ const vDays = views.views.sort((a,b) => a.timestamp.localeCompare(b.timestamp));
 const cDays = clones.clones.sort((a,b) => a.timestamp.localeCompare(b.timestamp));
 const peakView = vDays.reduce((a,b) => b.count > a.count ? b : a);
 const avgViews = Math.round(views.count / vDays.length);
-const last7v = vDays.slice(-7).reduce((s,d) => s + d.count, 0);
-const prev7v = vDays.slice(-14,-7).reduce((s,d) => s + d.count, 0);
-const weekDelta = prev7v ? Math.round((last7v - prev7v) / prev7v * 100) : 0;
+const last7 = vDays.slice(-7).reduce((s,d) => s + d.count, 0);
+const prev7 = vDays.slice(-14,-7).reduce((s,d) => s + d.count, 0);
+const trend = prev7 ? Math.round((last7 - prev7) / prev7 * 100) : 0;
+const trendCls = trend >= 0 ? 'trend-up' : 'trend-down';
 
 document.getElementById('stats').innerHTML = [
-  {label: 'Total Views', value: fmt(views.count), sub: fmt(views.uniques) + ' unique'},
-  {label: 'Total Clones', value: fmt(clones.count), sub: fmt(clones.uniques) + ' unique'},
-  {label: 'Daily Average', value: fmt(avgViews) + ' views', sub: fmt(Math.round(clones.count / cDays.length)) + ' clones'},
-  {label: 'Peak Day', value: fmt(peakView.count), sub: peakView.timestamp.slice(0,10)},
-  {label: '7-Day Trend', value: (weekDelta >= 0 ? '+' : '') + weekDelta + '%', sub: fmt(last7v) + ' vs ' + fmt(prev7v) + ' prior week'},
-].map(s => `<div class="stat-card"><div class="stat-label">${s.label}</div><div class="stat-value">${s.value}</div><div class="stat-sub">${s.sub}</div></div>`).join('');
+  { l:'Total Views', v:fmt(views.count), s:fmt(views.uniques)+' unique' },
+  { l:'Total Clones', v:fmt(clones.count), s:fmt(clones.uniques)+' unique' },
+  { l:'Daily Avg', v:fmt(avgViews), s:fmt(Math.round(clones.count/cDays.length))+' clones' },
+  { l:'Peak Day', v:fmt(peakView.count), s:peakView.timestamp.slice(0,10) },
+  { l:'7-Day Trend', v:`<span class="${trendCls}">${trend>=0?'+':''}${trend}%</span>`, s:fmt(last7)+' vs '+fmt(prev7) },
+].map(s=>`<div class="stat"><div class="stat-label">${s.l}</div><div class="stat-val">${s.v}</div><div class="stat-sub">${s.s}</div></div>`).join('');
 
-Chart.defaults.font.family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif";
-const commonScales = {
-  x: { type: 'time', time: { unit: 'day', tooltipFormat: 'MMM d' }, grid: { color: gridColor }, ticks: { color: tickColor } },
-  y: { grid: { color: gridColor }, ticks: { color: tickColor } }
-};
+const baseOpts = { chart:{fontFamily:'Inter,-apple-system,system-ui,sans-serif',background:'transparent',foreColor:isDark?'#94a3b8':'#6b7280',toolbar:{show:true,tools:{download:true,selection:true,zoom:true,zoomin:false,zoomout:false,pan:false,reset:true}}}, theme:{mode:apexTheme()}, grid:{borderColor:isDark?'#1e293b':'#e5e7eb',strokeDashArray:3}, tooltip:{theme:apexTheme()}, };
 
-new Chart(document.getElementById('viewsChart'), {
-  type: 'line',
-  data: { labels: vDays.map(d => d.timestamp), datasets: [
-    { label: 'Views', data: vDays.map(d => d.count), borderColor: '#6366f1', backgroundColor: 'rgba(99,102,241,0.1)', fill: true, tension: 0.3, pointRadius: 3, pointHoverRadius: 6 },
-    { label: 'Unique', data: vDays.map(d => d.uniques), borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,0.1)', fill: true, tension: 0.3, pointRadius: 3, pointHoverRadius: 6 }
-  ]},
-  options: { responsive: true, maintainAspectRatio: false, scales: { ...commonScales, y: { ...commonScales.y, beginAtZero: true } }, plugins: { legend: { labels: { color: tickColor } } } }
-});
+new ApexCharts(document.getElementById('viewsChart'), {
+  ...baseOpts,
+  chart:{...baseOpts.chart, type:'area', height:320, id:'views',
+    events:{ markerClick:function(e,ctx,cfg){ showDayDetail(vDays[cfg.dataPointIndex]?.timestamp.slice(0,10)); } },
+    zoom:{enabled:true,type:'x',autoScaleYaxis:true},
+  },
+  series:[
+    {name:'Views', data:vDays.map(d=>[new Date(d.timestamp).getTime(), d.count])},
+    {name:'Unique', data:vDays.map(d=>[new Date(d.timestamp).getTime(), d.uniques])},
+  ],
+  colors:['#6366f1','#f59e0b'],
+  fill:{type:'gradient',gradient:{shadeIntensity:1,opacityFrom:0.4,opacityTo:0.05,stops:[0,95]}},
+  stroke:{curve:'smooth',width:2.5},
+  xaxis:{type:'datetime',labels:{datetimeUTC:false}},
+  yaxis:{labels:{formatter:v=>v>=1000?(v/1000).toFixed(1)+'k':v}},
+  dataLabels:{enabled:false},
+  markers:{size:0,hover:{size:5}},
+  legend:{position:'top',horizontalAlign:'left',fontSize:'12px'},
+}).render();
 
-new Chart(document.getElementById('clonesChart'), {
-  type: 'bar',
-  data: { labels: cDays.map(d => d.timestamp), datasets: [
-    { label: 'Clones', data: cDays.map(d => d.count), backgroundColor: 'rgba(99,102,241,0.7)', borderRadius: 4 },
-    { label: 'Unique', data: cDays.map(d => d.uniques), backgroundColor: 'rgba(245,158,11,0.7)', borderRadius: 4 }
-  ]},
-  options: { responsive: true, maintainAspectRatio: false, scales: { ...commonScales, y: { ...commonScales.y, beginAtZero: true } }, plugins: { legend: { labels: { color: tickColor } } } }
-});
+new ApexCharts(document.getElementById('clonesChart'), {
+  ...baseOpts,
+  chart:{...baseOpts.chart, type:'bar', height:240, stacked:false},
+  series:[
+    {name:'Clones', data:cDays.map(d=>[new Date(d.timestamp).getTime(), d.count])},
+    {name:'Unique', data:cDays.map(d=>[new Date(d.timestamp).getTime(), d.uniques])},
+  ],
+  colors:['#6366f1','#f59e0b'],
+  plotOptions:{bar:{borderRadius:3,columnWidth:'60%'}},
+  xaxis:{type:'datetime',labels:{datetimeUTC:false}},
+  yaxis:{labels:{formatter:v=>v>=1000?(v/1000).toFixed(1)+'k':v}},
+  dataLabels:{enabled:false},
+  legend:{position:'top',horizontalAlign:'left',fontSize:'12px'},
+}).render();
 
-const latestPaths = DATA.paths_series.length ? DATA.paths_series[DATA.paths_series.length - 1].paths : [];
-const latestRefs = DATA.referrer_series.length ? DATA.referrer_series[DATA.referrer_series.length - 1].referrers : [];
-const prevRefs = DATA.referrer_series.length > 7 ? DATA.referrer_series[DATA.referrer_series.length - 8].referrers : null;
-const maxPathCount = latestPaths[0]?.count || 1;
-const maxRefCount = latestRefs[0]?.count || 1;
+const latestPaths = DATA.paths_series.length ? DATA.paths_series[DATA.paths_series.length-1].paths : [];
+const latestRefs = DATA.referrer_series.length ? DATA.referrer_series[DATA.referrer_series.length-1].referrers : [];
+const prevRefs = DATA.referrer_series.length > 7 ? DATA.referrer_series[DATA.referrer_series.length-8].referrers : null;
 
-document.getElementById('pathsTable').innerHTML = '<thead><tr><th>#</th><th>Page</th><th>Views</th><th>Unique</th></tr></thead><tbody>' +
-  latestPaths.map((p, i) => {
-    const short = shortenPath(p.path);
-    const w = Math.round(p.count / maxPathCount * 100);
-    return `<tr><td class="rank">${i+1}</td><td class="bar-cell"><div class="bar-bg" style="width:${w}%;background:${colors[i]}"></div><span class="path-text" title="${p.path}">${short}</span></td><td>${fmt(p.count)}</td><td>${fmt(p.uniques)}</td></tr>`;
-  }).join('') + '</tbody>';
+document.getElementById('pathsTable').innerHTML = '<thead><tr><th>#</th><th>Page</th><th>Views</th><th>Unique</th></tr></thead><tbody>'+
+  latestPaths.map((p,i)=>{
+    const w = Math.round(p.count/(latestPaths[0]?.count||1)*100);
+    return `<tr><td style="color:var(--text2)">${i+1}</td><td class="bar-wrap"><div class="bar-fill" style="width:${w}%;background:${colors[i]}"></div><span class="mono">${shortenPath(p.path)}</span></td><td>${fmt(p.count)}</td><td>${fmt(p.uniques)}</td></tr>`;
+  }).join('')+'</tbody>';
 
-document.getElementById('referrersTable').innerHTML = '<thead><tr><th>#</th><th>Referrer</th><th>Views</th><th>Trend</th></tr></thead><tbody>' +
-  latestRefs.map((r, i) => {
-    const w = Math.round(r.count / maxRefCount * 100);
-    let deltaHtml = '';
-    if (prevRefs) {
-      const prev = prevRefs.find(p => p.referrer === r.referrer);
-      if (prev) { const pct = Math.round((r.count - prev.count) / prev.count * 100); deltaHtml = pct !== 0 ? `<span class="delta ${pct > 0 ? 'delta-up' : 'delta-down'}">${pct > 0 ? '+' : ''}${pct}%</span>` : ''; }
-      else { deltaHtml = '<span class="delta delta-up">new</span>'; }
-    }
-    return `<tr><td class="rank">${i+1}</td><td class="bar-cell"><div class="bar-bg" style="width:${w}%;background:${colors[i]}"></div>${r.referrer}</td><td>${fmt(r.count)}${deltaHtml}</td><td>${fmt(r.uniques)} unique</td></tr>`;
-  }).join('') + '</tbody>';
+document.getElementById('refsTable').innerHTML = '<thead><tr><th>#</th><th>Referrer</th><th>Views</th><th>Unique</th></tr></thead><tbody>'+
+  latestRefs.map((r,i)=>{
+    const w = Math.round(r.count/(latestRefs[0]?.count||1)*100);
+    let badge = '';
+    if(prevRefs){ const p=prevRefs.find(x=>x.referrer===r.referrer); if(p){const d=Math.round((r.count-p.count)/p.count*100); if(d!==0) badge=`<span class="badge ${d>0?'badge-up':'badge-down'}">${d>0?'+':''}${d}%</span>`;}else{badge='<span class="badge badge-new">new</span>';}}
+    return `<tr><td style="color:var(--text2)">${i+1}</td><td class="bar-wrap"><div class="bar-fill" style="width:${w}%;background:${colors[i]}"></div>${r.referrer}${badge}</td><td>${fmt(r.count)}</td><td>${fmt(r.uniques)}</td></tr>`;
+  }).join('')+'</tbody>';
 
 const allRefsMap = {};
-DATA.referrer_series.forEach(snap => { snap.referrers.forEach(r => { if (!allRefsMap[r.referrer] || r.count > allRefsMap[r.referrer].count) allRefsMap[r.referrer] = { count: r.count, uniques: r.uniques, peakDate: snap.date }; }); });
-const allRefsRanked = Object.entries(allRefsMap).sort((a,b) => b[1].count - a[1].count);
-const allRefMax = allRefsRanked[0]?.[1].count || 1;
-document.getElementById('allReferrersTable').innerHTML = '<thead><tr><th>#</th><th>Referrer</th><th>Peak 14-day Count</th><th>Unique</th><th>Peak Snapshot</th></tr></thead><tbody>' +
-  allRefsRanked.map(([name, data], i) => {
-    const w = Math.round(data.count / allRefMax * 100);
-    return `<tr><td class="rank">${i+1}</td><td class="bar-cell"><div class="bar-bg" style="width:${w}%;background:${colors[i % colors.length]}"></div>${name}</td><td>${fmt(data.count)}</td><td>${fmt(data.uniques)}</td><td>${data.peakDate}</td></tr>`;
-  }).join('') + '</tbody>';
+DATA.referrer_series.forEach(s=>s.referrers.forEach(r=>{ if(!allRefsMap[r.referrer]||r.count>allRefsMap[r.referrer].count) allRefsMap[r.referrer]={count:r.count,uniques:r.uniques,peak:s.date}; }));
+const allRefs = Object.entries(allRefsMap).sort((a,b)=>b[1].count-a[1].count);
+
+new ApexCharts(document.getElementById('allRefsChart'), {
+  ...baseOpts,
+  chart:{...baseOpts.chart, type:'bar', height:Math.max(250, allRefs.length*32)},
+  series:[{name:'Peak 14-day views',data:allRefs.map(([,d])=>d.count)},{name:'Unique',data:allRefs.map(([,d])=>d.uniques)}],
+  colors:['#6366f1','#f59e0b'],
+  plotOptions:{bar:{horizontal:true,borderRadius:4,barHeight:'65%',dataLabels:{position:'top'}}},
+  xaxis:{labels:{formatter:v=>v>=1000?(v/1000).toFixed(0)+'k':v}},
+  yaxis:{labels:{style:{fontSize:'11px'}},categories:allRefs.map(([n])=>n)},
+  dataLabels:{enabled:false},
+  tooltip:{y:{formatter:v=>fmt(v)}},
+  legend:{position:'top',horizontalAlign:'left',fontSize:'12px'},
+}).render();
 
 const allRefNames = new Set();
-DATA.referrer_series.forEach(s => s.referrers.forEach(r => allRefNames.add(r.referrer)));
-const topRefs = [...allRefNames].map(name => { const latest = latestRefs.find(r => r.referrer === name); return { name, count: latest ? latest.count : 0 }; }).sort((a,b) => b.count - a.count).slice(0, 8).map(r => r.name);
+DATA.referrer_series.forEach(s=>s.referrers.forEach(r=>allRefNames.add(r.referrer)));
+const topRefNames = [...allRefNames].map(n=>({n,c:(latestRefs.find(r=>r.referrer===n)||{count:0}).count})).sort((a,b)=>b.c-a.c).slice(0,8).map(x=>x.n);
 
-new Chart(document.getElementById('refChart'), {
-  type: 'line',
-  data: { labels: DATA.referrer_series.map(s => s.date), datasets: topRefs.map((name, i) => ({
-    label: name, data: DATA.referrer_series.map(s => { const r = s.referrers.find(x => x.referrer === name); return r ? r.count : null; }),
-    borderColor: colors[i], backgroundColor: 'transparent', tension: 0.3, pointRadius: 2, pointHoverRadius: 5, spanGaps: true
-  }))},
-  options: { responsive: true, maintainAspectRatio: false, scales: commonScales, plugins: { legend: { labels: { color: tickColor } } } }
-});
+new ApexCharts(document.getElementById('refTrendChart'), {
+  ...baseOpts,
+  chart:{...baseOpts.chart, type:'line', height:320, zoom:{enabled:true,type:'x'}},
+  series:topRefNames.map((name,i)=>({
+    name, data:DATA.referrer_series.map(s=>{const r=s.referrers.find(x=>x.referrer===name); return [new Date(s.date).getTime(), r?r.count:null];})
+  })),
+  colors:colors.slice(0,8),
+  stroke:{curve:'smooth',width:2},
+  xaxis:{type:'datetime'},
+  yaxis:{labels:{formatter:v=>v>=1000?(v/1000).toFixed(1)+'k':v}},
+  dataLabels:{enabled:false},
+  markers:{size:0,hover:{size:4}},
+  legend:{position:'top',fontSize:'11px'},
+}).render();
 
 const allPathNames = new Set();
-DATA.paths_series.forEach(s => s.paths.forEach(p => allPathNames.add(p.path)));
-const topPaths = [...allPathNames].map(name => { const latest = latestPaths.find(p => p.path === name); return { name, count: latest ? latest.count : 0 }; }).sort((a,b) => b.count - a.count).slice(0, 6).map(p => p.name);
+DATA.paths_series.forEach(s=>s.paths.forEach(p=>allPathNames.add(p.path)));
+const topPathNames = [...allPathNames].map(n=>({n,c:(latestPaths.find(p=>p.path===n)||{count:0}).count})).sort((a,b)=>b.c-a.c).slice(0,6).map(x=>x.n);
 
-new Chart(document.getElementById('pathsChart'), {
-  type: 'line',
-  data: { labels: DATA.paths_series.map(s => s.date), datasets: topPaths.map((name, i) => ({
-    label: shortenPath(name), data: DATA.paths_series.map(s => { const p = s.paths.find(x => x.path === name); return p ? p.count : null; }),
-    borderColor: colors[i], backgroundColor: 'transparent', tension: 0.3, pointRadius: 2, pointHoverRadius: 5, spanGaps: true
-  }))},
-  options: { responsive: true, maintainAspectRatio: false, scales: commonScales, plugins: { legend: { labels: { color: tickColor, font: { size: 11 } } } } }
-});
+new ApexCharts(document.getElementById('pathTrendChart'), {
+  ...baseOpts,
+  chart:{...baseOpts.chart, type:'line', height:320, zoom:{enabled:true,type:'x'}},
+  series:topPathNames.map((name,i)=>({
+    name:shortenPath(name), data:DATA.paths_series.map(s=>{const p=s.paths.find(x=>x.path===name); return [new Date(s.date).getTime(), p?p.count:null];})
+  })),
+  colors:colors.slice(0,6),
+  stroke:{curve:'smooth',width:2},
+  xaxis:{type:'datetime'},
+  yaxis:{labels:{formatter:v=>v>=1000?(v/1000).toFixed(1)+'k':v}},
+  dataLabels:{enabled:false},
+  markers:{size:0,hover:{size:4}},
+  legend:{position:'top',fontSize:'11px'},
+}).render();
+
+function showDayDetail(date) {
+  if (!date) return;
+  const el = document.getElementById('dayDetail');
+  const titleEl = document.getElementById('dayDetailTitle');
+  const day = vDays.find(d=>d.timestamp.startsWith(date));
+  const clone = cDays.find(d=>d.timestamp.startsWith(date));
+  const snap = DATA.referrer_series.find(s=>s.date===date);
+  const pathSnap = DATA.paths_series.find(s=>s.date===date);
+  titleEl.textContent = date;
+  let html = '<div class="grid-2" style="gap:12px">';
+  html += '<div><strong style="font-size:.75rem">Views:</strong> '+(day?fmt(day.count)+' ('+fmt(day.uniques)+' unique)':'no data')+'<br><strong style="font-size:.75rem">Clones:</strong> '+(clone?fmt(clone.count)+' ('+fmt(clone.uniques)+' unique)':'no data')+'</div>';
+  if (snap) {
+    html += '<div><strong style="font-size:.75rem">Referrers (14-day window):</strong><br>';
+    snap.referrers.slice(0,5).forEach(r=>{ html += `<span class="mono" style="font-size:.7rem">${r.referrer}: ${fmt(r.count)}</span><br>`; });
+    html += '</div>';
+  }
+  html += '</div>';
+  if (pathSnap) {
+    html += '<div style="margin-top:8px"><strong style="font-size:.75rem">Top pages (14-day window):</strong>';
+    html += '<table style="margin-top:4px"><thead><tr><th>Page</th><th>Views</th></tr></thead><tbody>';
+    pathSnap.paths.slice(0,5).forEach(p=>{ html += `<tr><td class="mono">${shortenPath(p.path)}</td><td>${fmt(p.count)}</td></tr>`; });
+    html += '</tbody></table></div>';
+  }
+  el.innerHTML = html;
+  el.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
 </script>
 </body>
 </html>"""
