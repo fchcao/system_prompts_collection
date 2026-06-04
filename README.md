@@ -1,14 +1,16 @@
+<a href='https://ko-fi.com/O5O3P8KR4' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi5.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+
 > **As seen in The Washington Post:** [See the hidden rules behind AI. Then use them to rewrite this article.](https://wapo.st/49t4gSb) (May 11, 2026)
 # System Prompts Leaks
+The purpose of this repo is to document the System Prompt instructions for all the AI chatbots out there - Claude, ChatGPT, Gemini etc.
 
 <img alt="ChatGPT leaking its system prompt after being asked to repeat all of the above" src="https://github.com/user-attachments/assets/0037a6c5-2ae4-4d34-8be0-0d679773172b" />
 
+[![GitHub Views per Week](https://raw.githubusercontent.com/asgeirtj/system_prompts_leaks/traffic/traffic-system_prompts_leaks/views_per_week.svg)](https://github.com/asgeirtj/system_prompts_leaks)
+![Last Commit](https://img.shields.io/github/last-commit/asgeirtj/system_prompts_leaks?style=flat)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](http://makeapullrequest.com)
 
-[![GitHub Views per Week](https://raw.githubusercontent.com/asgeirtj/system_prompts_leaks/traffic/traffic-system_prompts_leaks/views_per_week.svg)](https://github.com/asgeirtj/system_prompts_leaks?)
-[![GitHub Clones per Week](https://raw.githubusercontent.com/asgeirtj/system_prompts_leaks/traffic/traffic-system_prompts_leaks/clones_per_week.svg)](https://github.com/asgeirtj/system_prompts_leaks)
- ![Last Commit](https://img.shields.io/github/last-commit/asgeirtj/system_prompts_leaks?style=flat)
 
-<a href="https://trendshift.io/repositories/14577" target="_blank"><img src="https://trendshift.io/api/badge/repositories/14577" alt="asgeirtj%2Fsystem_prompts_leaks | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 
 
 
@@ -31,6 +33,7 @@
 | **Amp Code** | May 9, 2026 | [System prompt](Misc/amp-code.md) |
 
 ---
+![Anthropic](https://shieldcn.dev/badge/Anthropic-D97757.svg?logo=anthropic&logoColor=fff&variant=secondary&mode=light)
 
 ## Anthropic — Claude
 
@@ -60,6 +63,8 @@
 | Sonnet 3.7 | [System prompt](Anthropic/old/claude-3.7-sonnet.md) · [With tools](Anthropic/old/claude-3.7-sonnet-w-tools.md) · [Full w/ tools](Anthropic/old/claude-3.7-full-system-message-with-all-tools.md) · [Human-readable](Anthropic/old/claude-3.7-sonnet-full-system-message-humanreadable.md) |
 
 </details>
+
+![OpenAI](https://shieldcn.dev/badge/OpenAI-412991.svg?logo=ri%3ASiOpenai&variant=secondary&mode=light)
 
 ## OpenAI — ChatGPT
 
@@ -94,6 +99,8 @@
 | Codex (older) | [GPT-5](OpenAI/codex/gpt-5.md) · [GPT-5.1](OpenAI/codex/gpt-5.1.md) · [GPT-5.1 Codex](OpenAI/codex/gpt-5.1-codex.md) · [GPT-5.1 Mini](OpenAI/codex/gpt-5.1-codex-mini.md) · [GPT-5.1 Max](OpenAI/codex/gpt-5.1-codex-max.md) · [GPT-5.2](OpenAI/codex/gpt-5.2.md) · [5.2 Friendly](OpenAI/codex/personality_friendly_gpt-5.2-codex.md) · [5.2 Pragmatic](OpenAI/codex/personality_pragmatic_gpt-5.2-codex.md) |
 
 </details>
+
+![Google Gemini](https://shieldcn.dev/badge/Google%20Gemini-8E75B2.svg?logo=googlegemini&logoColor=fff&variant=secondary&mode=light)
 
 ## Google — Gemini
 
@@ -197,20 +204,18 @@
 
 ---
 
-## Contributing
 
-Have a system prompt that's not listed here? PRs welcome — drop the raw text as a `.md` file in the appropriate folder.
+## Contact
 
-Want a specific model or product added? [Open an issue](https://github.com/asgeirtj/system_prompts_leaks/issues) to request it.
+![a](https://badgen.net/email/asgeirtj/gmail.com)
+[![X](https://img.shields.io/badge/@asgeirtj-black?logo=x&logoColor=white)](https://x.com/asgeirtj)
 
-## License
 
-Released under [CC0 1.0 Universal](LICENSE) — public domain.
-
-## Star History
+## Growth
 
 [![Star History Chart](https://api.star-history.com/svg?repos=asgeirtj/system_prompts_leaks&type=Date)](https://www.star-history.com/#asgeirtj/system_prompts_leaks&Date)
 
+<a href="https://trendshift.io/repositories/14577" target="_blank"><img src="https://trendshift.io/api/badge/repositories/14577" alt="asgeirtj%2Fsystem_prompts_leaks | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 
 
 <img alt="Claude confirming an extracted system prompt is authentic" src="https://github.com/user-attachments/assets/444e3fcc-9374-4964-afd3-069222713dc0" />
