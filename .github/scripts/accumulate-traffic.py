@@ -103,6 +103,7 @@ DASHBOARD_TEMPLATE = r"""<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>system_prompts_leaks — Traffic Dashboard</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='1' x2='1' y2='0'%3E%3Cstop offset='0%25' stop-color='%236366f1'/%3E%3Cstop offset='100%25' stop-color='%23818cf8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Cpath d='M16 44 L26 32 L34 38 L48 20' stroke='%23fff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Ccircle cx='48' cy='20' r='4' fill='%23fbbf24'/%3E%3Crect x='14' y='48' width='6' height='4' rx='1' fill='rgba(255,255,255,0.5)'/%3E%3Crect x='23' y='46' width='6' height='6' rx='1' fill='rgba(255,255,255,0.5)'/%3E%3Crect x='32' y='44' width='6' height='8' rx='1' fill='rgba(255,255,255,0.5)'/%3E%3Crect x='41' y='42' width='6' height='10' rx='1' fill='rgba(255,255,255,0.5)'/%3E%3C/svg%3E">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 <style>
