@@ -96,7 +96,18 @@ def build_dashboard(publish_dir, ref_history, path_history):
         f.write(html)
     print(f"Dashboard written to {out_path}")
 
-    redirect = '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0;url=https://github.com/asgeirtj/system_prompts_leaks"><link rel="canonical" href="https://github.com/asgeirtj/system_prompts_leaks"></head></html>'
+    redirect = """<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta http-equiv="refresh" content="0;url=https://github.com/asgeirtj/system_prompts_leaks">
+<link rel="canonical" href="https://github.com/asgeirtj/system_prompts_leaks">
+<meta property="og:title" content="System Prompts Leaks">
+<meta property="og:description" content="Extracted system prompts from Anthropic, OpenAI, Google, xAI, and more. Updated regularly.">
+<meta property="og:image" content="https://opengraph.githubassets.com/1/asgeirtj/system_prompts_leaks">
+<meta property="og:url" content="https://github.com/asgeirtj/system_prompts_leaks">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<title>System Prompts Leaks</title>
+</head></html>"""
     with open(os.path.join(publish_dir, "index.html"), "w") as f:
         f.write(redirect)
     print("Root redirect written")
