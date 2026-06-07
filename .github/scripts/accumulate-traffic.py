@@ -150,6 +150,8 @@ DASHBOARD_TEMPLATE = r"""<!DOCTYPE html>
   .badge-up{background:rgba(16,185,129,.15);color:#10b981}
   .badge-down{background:rgba(239,68,68,.15);color:#ef4444}
   .badge-new{background:rgba(99,102,241,.15);color:#6366f1}
+  .stat-since{font-size:.6rem;margin-top:6px;padding:2px 7px;background:rgba(99,102,241,.08);color:#6366f1;border-radius:4px;display:inline-block;font-weight:600;letter-spacing:.02em}
+  @media(prefers-color-scheme:dark){.stat-since{background:rgba(99,102,241,.15);color:#818cf8}}
   .drill-info{text-align:center;font-size:.75rem;color:var(--text2);margin-top:4px}
 </style>
 </head>
@@ -200,14 +202,17 @@ const last7 = vDays.slice(-7).reduce((s,d) => s + d.count, 0);
 const prev7 = vDays.slice(-14,-7).reduce((s,d) => s + d.count, 0);
 const trend = prev7 ? Math.round((last7 - prev7) / prev7 * 100) : 0;
 const trendCls = trend >= 0 ? 'trend-up' : 'trend-down';
+const sinceStart = new Date(vDays[0].timestamp);
+const sinceFmt = sinceStart.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+const dayCount = Math.round((Date.now() - sinceStart.getTime()) / 86400000);
 
 document.getElementById('stats').innerHTML = [
-  { l:'Total Views', v:fmt(views.count), s:fmt(views.uniques)+' unique' },
+  { l:'Total Views', v:fmt(views.count), s:fmt(views.uniques)+' unique', t:`since ${sinceFmt} · ${dayCount}d` },
   { l:'Total Clones', v:fmt(clones.count), s:fmt(clones.uniques)+' unique' },
   { l:'Daily Avg', v:fmt(avgViews), s:fmt(Math.round(clones.count/cDays.length))+' clones' },
   { l:'Peak Day', v:fmt(peakView.count), s:peakView.timestamp.slice(0,10) },
   { l:'7-Day Trend', v:`<span class="${trendCls}">${trend>=0?'+':''}${trend}%</span>`, s:fmt(last7)+' vs '+fmt(prev7) },
-].map(s=>`<div class="stat"><div class="stat-label">${s.l}</div><div class="stat-val">${s.v}</div><div class="stat-sub">${s.s}</div></div>`).join('');
+].map(s=>`<div class="stat"><div class="stat-label">${s.l}</div><div class="stat-val">${s.v}</div><div class="stat-sub">${s.s}</div>${s.t?`<div class="stat-since">${s.t}</div>`:''}</div>`).join('');
 
 const baseOpts = { chart:{fontFamily:'Inter,-apple-system,system-ui,sans-serif',background:'transparent',foreColor:isDark?'#94a3b8':'#6b7280',toolbar:{show:true,tools:{download:true,selection:true,zoom:true,zoomin:false,zoomout:false,pan:false,reset:true}}}, theme:{mode:apexTheme()}, grid:{borderColor:isDark?'#1e293b':'#e5e7eb',strokeDashArray:3}, tooltip:{theme:apexTheme()}, };
 
