@@ -16,9 +16,11 @@ The purpose of this repo is to document the System Prompt instructions for all t
 
 | What | Date | Link |
 |------|------|------|
-| **Claude Code (Opus 4.8)** | May 28, 2026 | [System prompt](Anthropic/claude-code-opus-4.8.md) |
-| **Claude Opus 4.8** | May 28, 2026 | [System prompt](Anthropic/claude-opus-4.8.md) |
-| **Claude Code & Cowork** | May 28, 2026 | [Claude Code](Anthropic/claude-code.md) · [Cowork](Anthropic/claude-cowork.md) · [Cowork Dispatch](Anthropic/claude-cowork-dispatch.md) |
+| **Claude Fable 5** | June 9, 2026 | [System prompt](Anthropic/claude-fable-5.md) |
+| **Claude Opus 4.8** | June 9, 2026 | [System prompt](Anthropic/claude-opus-4.8.md) · [Official](Anthropic/Official/2026-05-28-claude-opus-4.8.md) |
+| **Claude Code Glob & Grep tools** | June 9, 2026 | [Glob](Anthropic/Claude%20Code/glob-tool.md) · [Grep](Anthropic/Claude%20Code/grep-tool.md) |
+| **Claude Code (Opus 4.8)** | May 28, 2026 | [System prompt](Anthropic/Claude%20Code/claude-code-opus-4.8.md) |
+| **Claude Code & Cowork** | May 28, 2026 | [Claude Code](Anthropic/Claude%20Code/claude-code-opus-4.6.md) · [Cowork](Anthropic/claude-cowork.md) · [Cowork Dispatch](Anthropic/claude-cowork-dispatch.md) |
 | **GPT-5.5** | May 24, 2026 | [Thinking](OpenAI/gpt-5.5-thinking.md) · [Instant](OpenAI/gpt-5.5-instant.md) · [API](OpenAI/gpt-5.5-api.md) · [Pro API](OpenAI/gpt-5.5-pro-api.md) |
 | **Perplexity Computer** | May 21, 2026 | [System prompt](Perplexity/perplexity-computer.md) |
 | **VS Code Copilot Agent** | May 21, 2026 | [System prompt](Microsoft/vscode-copilot-agent.md) |
@@ -27,8 +29,6 @@ The purpose of this repo is to document the System Prompt instructions for all t
 | **Antigravity CLI** | May 20, 2026 | [System prompt](Google/antigravity-cli.md) |
 | **Zed AI** | May 16, 2026 | [System prompt](Misc/zed.md) |
 | **Grok Expert** | May 11, 2026 | [System prompt](xAI/grok-expert.md) |
-| **GPT-5.3-Codex-Spark** | May 10, 2026 | [System prompt](OpenAI/Codex/gpt-5.3-codex-spark.md) |
-| **Amp Code** | May 9, 2026 | [System prompt](Misc/amp-code.md) |
 
 ---
 ![Anthropic](https://shieldcn.dev/badge/Anthropic-D97757.svg?logo=anthropic&logoColor=fff&variant=secondary&mode=light)
@@ -37,10 +37,11 @@ The purpose of this repo is to document the System Prompt instructions for all t
 
 | Model | Prompt |
 |-------|--------|
+| **Claude Fable 5** | [**System prompt**](Anthropic/claude-fable-5.md) |
 | **Claude Opus 4.8** | [**System prompt**](Anthropic/claude-opus-4.8.md) |
-| **Claude Code (Opus 4.8)** | [**System prompt**](Anthropic/claude-code-opus-4.8.md) |
+| **Claude Code (Opus 4.8)** | [**System prompt**](Anthropic/Claude%20Code/claude-code-opus-4.8.md) |
 | **Claude Opus 4.7** | [**System prompt**](Anthropic/claude-opus-4.7.md) |
-| **Claude Code** | [**System prompt**](Anthropic/claude-code.md) |
+| **Claude Code (Opus 4.6)** | [**System prompt**](Anthropic/Claude%20Code/claude-code-opus-4.6.md) |
 | **Claude Opus 4.6** | [**System prompt**](Anthropic/claude-opus-4.6.md) |
 | **Claude Sonnet 4.6** | [**System prompt**](Anthropic/claude-sonnet-4.6.md) |
 | Claude.ai | [Anthropic Reminders](Anthropic/anthropic_reminders.md) |
@@ -50,7 +51,8 @@ The purpose of this repo is to document the System Prompt instructions for all t
 | | |
 |--|--|
 | Integrations | [Cowork](Anthropic/claude-cowork.md) · [Cowork Dispatch](Anthropic/claude-cowork-dispatch.md) · [Desktop Code](Anthropic/claude-desktop-code.md) · [Design](Anthropic/claude-design.md) · [Mobile iOS](Anthropic/claude-mobile-ios.md) · [In Chrome](Anthropic/claude-in-chrome.md) · [For Excel](Anthropic/claude-for-excel.md) · [For Word](Anthropic/claude-for-word.md) · [In PowerPoint](Anthropic/claude-in-powerpoint.md) · [Default Styles](Anthropic/default-styles.md) |
-| Published (`claude_behavior` at release date, not updated) | [Opus 4.7](Anthropic/Official/claude-opus-4.7.md) · [Opus 4.6](Anthropic/Official/claude-opus-4.6.md) · [Sonnet 4.6](Anthropic/Official/claude-sonnet-4.6.md) |
+| Claude Code extras | [Glob tool](Anthropic/Claude%20Code/glob-tool.md) · [Grep tool](Anthropic/Claude%20Code/grep-tool.md) · [Deferred tools](Anthropic/Claude%20Code/deferred-tools.md) · [Docs assistant](Anthropic/Claude%20Code/claude-code-docs-assistant.md) · [Bundled skills](Anthropic/Claude%20Code/bundled-skills/) |
+| Published (`claude_behavior` at release date, not updated) | [Opus 4.8](Anthropic/Official/2026-05-28-claude-opus-4.8.md) · [Opus 4.7](Anthropic/Official/2026-04-16-claude-opus-4.7.md) · [Opus 4.6](Anthropic/Official/2026-02-05-claude-opus-4.6.md) · [Sonnet 4.6](Anthropic/Official/2026-02-17-claude-sonnet-4.6.md) · [All versions](Anthropic/Official/) |
 | Without tools | [Opus 4.6](Anthropic/claude-opus-4.6-no-tools.md) · [Sonnet 4.6](Anthropic/claude-sonnet-4.6-no-tools.md) |
 | Raw prompts | [Opus 4.6](Anthropic/raw/claude-opus-4.6-raw.md) · [Opus 4.6 (no tools)](Anthropic/raw/claude-opus-4.6-no-tools-raw.md) · [Sonnet 4.6](Anthropic/raw/claude-sonnet-4.6-raw.md) · [Sonnet 4.6 (no tools)](Anthropic/raw/claude-sonnet-4.6-no-tools-raw.md) |
 | Visualize | [Visualization](Anthropic/visualize.md) |
